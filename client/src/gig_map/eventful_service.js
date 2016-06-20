@@ -13,35 +13,28 @@ var ApiService = function() {
     var latString = _.toString(lat);
     var longString = _.toString(long);
     this.latLong = "&latlong=" + latString + "," + longString + this.radius + "&";
-
-    return this.latLong;
   };
 
 
   this.setGenre = function(genre) {
     var genreString = _.toString(genre)
     this.genre = "&classificationName=" + genreString;
-
-    return this.genre;
   };
 
-
-  //"2016-06-16"
 
   this.setDates = function(startDate, endDate) {
     var startString = "startDateTime=" + startDate + "T00:00:00Z&";
     var endString = "endDateTime=" + endDate + "T23:59:59Z&";
     this.dateRange = startString + endString
-
-    return this.dateRange
   };
-
-  //startDateTime=2016-08-01T00:00:00Z&
-  //endDateTime=2016-08-01T23:59:59Z&
 
 
   this.createUrl = function() {
-
+    if(this.setGenre) {
+      this.url = this.url + this.genre + this.latLong + this.setDates;
+    } else {
+      this.url = this.url + "&classificationName=music" + this.latLong + this.setDates;
+    }
   };
 
 
@@ -55,10 +48,17 @@ var ApiService = function() {
         console.log(jsonString);
         var returnedData = JSON.parse(jsonString);
 
-        callback(returnedData);
+        var parsedData = createEventObject(returnedData);
+
+        callback(parsedData);
       };
     };
     request.send(null);
+  };
+
+
+  this.createEventObject = function(returnedData) {
+    
   };
 
   this.getEventInformation(eventId) {
