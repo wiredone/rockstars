@@ -2,17 +2,16 @@ var _ = require('lodash');
 
 var ApiService = function() {
 
-  this.url = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=evSfYBzBfoEQwQq13yf0I0Po7YGf2W";
-  this.radius = "&radius=2&unit=miles";
+  this.radius = "&radius=10&unit=miles";
   this.latLong = "";
   this.genre = "";
   this.dateRange = "";
 
 
-  this.setLatLng = function(lat, long) {
-    var latString = _.toString(lat);
-    var longString = _.toString(long);
-    this.latLong = "&latlong=" + latString + "," + longString + this.radius + "&";
+  this.setLatLng = function(coords) {
+    var latString = _.toString(coords["lat"]);
+    var longString = _.toString(coords["lng"]);
+    this.latLong = "&latlong=" + latString + "," + longString + this.radius;
   };
 
 
@@ -23,24 +22,25 @@ var ApiService = function() {
 
 
   this.setDates = function(startDate, endDate) {
-    var startString = "startDateTime=" + startDate + "T00:00:00Z&";
+    console.log(startDate);
+    console.log(endDate);
+    var startString = "&startDateTime=" + startDate + "T00:00:00Z&";
     var endString = "endDateTime=" + endDate + "T23:59:59Z&";
-    this.dateRange = startString + endString
+    this.dateRange = startString + endString;
   };
 
 
   this.createUrl = function() {
-    if(this.setGenre) {
-      this.url = this.url + this.genre + this.latLong + this.setDates;
-    } else {
-      this.url = this.url + "&classificationName=music" + this.latLong + this.setDates;
-    }
+    var url = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=evSfYBzBfoEQwQq13yf0I0Po7YGf2W";
+    console.log(url);
+      url = url + this.genre + this.latLong + this.dateRange;
+      return url;
   };
 
 
   this.getEvents = function(callback) {
     var request = new XMLHttpRequest();
-    request.open("GET", this.url);
+    request.open("GET", this.createUrl());
     request.onload = function() {
       if( request.status === 200 ) {
         console.log( "Data retrieved" );
@@ -65,7 +65,7 @@ var ApiService = function() {
 
     var eventsArray = createEventObjects(rawEvents);
 
-    for(event of rawEvents) {
+    for(var event of rawEvents) {
       venueObject.venueId = event["_embedded"]["venues"][0].id;
       venueObject.name = event["_embedded"]["venues"][0].name;
       venueObject.latLng.lat = event["_embedded"]["venues"][0]["location"].latitude;
@@ -78,7 +78,7 @@ var ApiService = function() {
     var eventObjectsArray = [];
     var eventObject = {eventId: "", venueId: "", artist: "", startDate: "", startTime: ""}
 
-    for(event of rawEvents) {
+    for(var event of rawEvents) {
       eventObject.eventId = event.id;
       eventObject.venueId = event["_embedded"]["venues"][0].id;
       eventObject.artist = event.artist;

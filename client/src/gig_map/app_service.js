@@ -1,8 +1,8 @@
 var GigMapperApp = function(map, cityGeocoder, apiService) {
 
   this.city = "";
-  this.startDate = new Date();
-  this.endDate = new Date();
+  this.startDate = "";
+  this.endDate = "";
   this.genre = "";
   this.map = map;
   this.cityGeocoder = cityGeocoder;
@@ -11,23 +11,34 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
   // this.userId = "";
   // this.events = [];
 
-  this.setProperties = function() {
+  this.setProperties = function(citySelect) {
+    if(citySelect) {
+      this.setCity(citySelect);
+    } else {
     this.setCity();
+    };
     this.setGenre();
     this.setStartDate();
     this.setEndDate();
   };
 
-  this.setCity = function() {
-    this.city = document.getElementbyId("city-input").value;
+  this.setCity = function(citySelect) {
+    if(citySelect) {
+      this.city = this.getSelected(citySelect);
+      console.log(this.getSelected(citySelect));
+      console.log("city", this.city);
+    } else {
+    this.city = document.getElementById("city-input").value;
+    };
   };
 
   this.setStartDate = function() {
-    this.StartDate = document.getElementById("start-date").value;
+    this.startDate = document.getElementById("start-date").value;
+    console.log("date in app:", document.getElementById("start-date").value);
   };
 
   this.setEndDate = function() {
-    this.EndDate = document.getElementById("end-date").value;
+    this.endDate = document.getElementById("end-date").value;
   };
 
   this.getSelected = function(select) {
@@ -36,16 +47,17 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
 
   this.setGenre = function() {
     var genreSelect = document.getElementById("genre-drop");
-    this.genre = getSelected(genreSelect);
+    this.genre = this.getSelected(genreSelect);
   };
 
-  this.findCityCoords = function() {
+  this.findCityCoords = function(callback) {
     this.cityGeocoder.getCoords(this.city, function(results) {
-      if(result["lat"]) {
+      if(!Array.isArray(results)) {
         this.map.resetCenter(results);
-        return results
+        callback(results);
       } else {
-        createCitySelect(results);
+        this.createCitySelect(results);
+        callback();
       };
     }.bind(this));
   };
@@ -60,9 +72,10 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
     };
   };
 
-  this.updateCity = function(citySelect) {
-    this.city = getSelected(citySelect);
-  };
+  // this.updateCity = function(citySelect) {
+  //   this.city = this.getSelected(citySelect);
+  //   console.log("got here", this.city);
+  // };
 
 };
 

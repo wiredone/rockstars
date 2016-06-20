@@ -15,10 +15,25 @@ var main = function() {
   var apiService = new ApiService();
   var app = new GigMapperApp(map, cityGeocoder, apiService);
 
-  var handleClick = function() {
-    app.setProperties();
-    app.findCityCoords()
-    apiService.setLatLng();
+  var handleClick = function(event) {
+    if(event.srcElement.id === "search-btn") {
+      app.setProperties();
+    } else {
+      app.setProperties(event.srcElement);
+    };
+    app.findCityCoords(function(coords) {
+      if(coords) {
+        apiService.setLatLng(coords);
+        apiService.setDates(app.startDate, app.endDate);
+        apiService.setGenre(app.genre);
+        apiService.getEvents(function(venues) {
+          for(var venue of venues) {
+            map.addInfoWindow(venue.latLng, "1", "Lovely Shows");
+          };
+        });
+      };
+    });
+    
   };
 
   document.getElementById("form").addEventListener("submit", function(event) {
@@ -28,12 +43,15 @@ var main = function() {
 
   document.getElementById("search-btn").addEventListener("click", handleClick);
 
-  document.getElementById("city-select").addEventListener("change", function(event) {
-      app.updateCity(event.//city-select);
-      handleClick();
+  document.getElementById("city-drop").addEventListener("change", function(event) {
+      // app.setCity(event.srcElement);
+      handleClick(event);
+      
     });
-  };
 };
+
+
+window.onload = main;
 
 
 // user searches for venues in by city, dates and venue
@@ -57,21 +75,20 @@ var main = function() {
 // });
 
 // something like this???
-  var getInfoWindowContent = function() {
+  // var getInfoWindowContent = function() {
     // var events = eService.getEventsByVenue(venueId); 
     // for(var i=0, i<events.length, i++) {
       // var content = do some things here
     // };
-  };  
+  // };  
 
 // something like this???
-  var addVenueMarkers = function() {
+  // var addVenueMarkers = function() {
     // var venues = eService.getVenuesByLocation(latlng, radius);
     // for(var i=0, i<venues.length, i++) {
     //   venueCoords = venues["latlng"];
     //   map.addInfoWindow(map.convertCoords(venueCoords), i+1, getInfoWindowContent());
     // };
-  };
+  // };
 
 
-window.onload = main;

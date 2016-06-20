@@ -1,46 +1,56 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfERxvotuACmtrlTpUo675GubOeVf7pg0"></script>
+    <script src="bundle.js"></script>
     <title>Gigmapper Team Rockstar</title>
     <meta name="description" content="Gig-Mapper is a Music/Events Search App.">
     <!-- Google Fonts integration: http://www.google.com/fonts -->
   <!--  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700,300|Love+Ya+Like+A+Sister' rel='stylesheet' type='text/css'> -->
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/styles.css">
+
   </head>
   <body>
 
     <div class="container">
       <header class="main">
-        <nav>
           <h2>Gigmapper.rocks</h2>
+          <form id="form">
           <ul class="clearfix">
             <li><a href="">City</a></li>
-                  <input type="text" placeholder="Enter City">
+                  <input type="text" placeholder="Enter City" id="city-input">
                  <!--  <input type="submit" class="btn btn-small" value="Search"> -->
             <li><a href="">Genre</a></li>
-                  <input type="text" placeholder="Select Genre">
+                  <select name="genre" id="genre-drop">
+                    <option value="rock and pop">Rock and Pop</option>
+                    <option value="latin">Latin</option>
+                  </select>
                  <!--  <input type="submit" class="btn btn-small" value="Search"> -->
             <li><a href="">Start Date</a></li>
-            <input type="date" placeholder="date" id="date">
+            <input type="date" placeholder="date" id="start-date">
             <li><a href="">End Date</a></li>
-            <input type="date" placeholder="date" id="date">
+            <input type="date" placeholder="date" id="end-date">
+            <li><a href="">Select City:</a></li>
+            <select name="city" id="city-drop">
+            </select>
           </ul>
-        </nav>
+          <button type="button" id="search-btn">Search</button>
+        </form>
       </header>
     </div><!-- end container -->
 
-    <script>
-    <div class="map" id="map"></div>
-        </script><!-- end of map -->
 
-    <div id="hero">
+    <div class="map" id="map"></div>
+
+ <!--    <div id="hero">
     <div class="map" id="map"></div>
       <div class="container">
-        <img src="images/splash.png" alt="Gig-mapper">
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfERxvotuACmtrlTpUo675GubOeVf7pg0"></script>
-      </div><!-- end container -->
-    </div><!-- end hero -->
+        <img src="images/splash.png" alt="Gig-mapper"> -->
+
+      <!-- </div> --><!-- end container -->
+    <!-- </div> --><!-- end hero -->
 
 
     <div class="container">
