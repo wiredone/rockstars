@@ -56,39 +56,23 @@ var ApiService = function() {
     request.send(null);
   };
 
-// var eventObject = {
-//   eventId: "",
-//   venueId: "",
-//   artist: "",
-//   startDate: "",
-//   endDate: "",
-//   startTime: ""
-// }
 
-// venueObject = {
-//   venueId: "",
-//   name: "",
-//   latLong: "",
-//   events = []
-// }
+  this.createVenueObjects = function(returnedData) {
+    var venueObjectArray = [];
+    var venueObject = {venueId: "", name: "", latLng: {lat: "", lng: ""}, events: ""};
 
+    var rawEvents = returnedData["_embedded"];
 
-this.createVenueObjects = function(returnedData) {
-  var venueObjectArray = [];
-  var venueObject = {venueId: "", name: "", latLng: {lat: "", lng: ""}, events: ""};
+    var eventObjectsArray = createEventObjects();
 
-  var rawEvents = returnedData["_embedded"];
-
-  var eventObjectsArray = createEventObjects();
-
-  for(event of rawEvents) {
-    venueObject.venueId = event["_embedded"]["venues"][0].id;
-    venueObject.name = event["_embedded"]["venues"][0].name;
-    venueObject.latLng.lat = event["_embedded"]["venues"][0]["location"].latitude;
-    venueObject.latLng.lng = event["_embedded"]["venues"][0]["location"].longitude;
-    venueObject.events = eventObjectsArray;
+    for(event of rawEvents) {
+      venueObject.venueId = event["_embedded"]["venues"][0].id;
+      venueObject.name = event["_embedded"]["venues"][0].name;
+      venueObject.latLng.lat = event["_embedded"]["venues"][0]["location"].latitude;
+      venueObject.latLng.lng = event["_embedded"]["venues"][0]["location"].longitude;
+      venueObject.events = eventObjectsArray;
+    }
   }
-}
 
   this.createEventObjects = function(rawEvents) {
     var eventObjectArray = [];
