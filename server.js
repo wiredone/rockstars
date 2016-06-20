@@ -22,7 +22,6 @@ app.get('/', function (req, res) {
 
 });
 
-<<<<<<< HEAD
 // we need an xml post for the api data that is being uploaded to the database - what data is being uploaded? user and events.
 
 
