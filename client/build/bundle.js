@@ -233,10 +233,11 @@
 	
 	
 	  this.createUrl = function() {
-	    var url = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=evSfYBzBfoEQwQq13yf0I0Po7YGf2W";
+	    var url = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=evSfYBzBfoEQwQq13yf0I0Po7YGf2Wcs";
 	    console.log(url);
-	      url = url + this.genre + this.latLong + this.dateRange;
-	      return url;
+	    url = url + this.genre + this.latLong + this.dateRange;
+	    console.log(this.genre + this.latLong + this.dateRange);
+	    return url;
 	  };
 	
 	
@@ -249,8 +250,8 @@
 	        var jsonString = request.responseText;
 	        console.log(jsonString);
 	        var returnedData = JSON.parse(jsonString);
-	
-	        var parsedData = createVenueObjects(returnedData);
+	        console.log(this);
+	        var parsedData = this.createVenueObjects(returnedData);
 	
 	        callback(parsedData);
 	      };
@@ -265,7 +266,7 @@
 	
 	    var rawEvents = returnedData["_embedded"];
 	
-	    var eventsArray = createEventObjects(rawEvents);
+	    var eventsArray = this.createEventObjects(rawEvents);
 	
 	    for(var event of rawEvents) {
 	      venueObject.venueId = event["_embedded"]["venues"][0].id;
@@ -274,6 +275,7 @@
 	      venueObject.latLng.lng = event["_embedded"]["venues"][0]["location"].longitude;
 	      venueObject.events = eventsArray;
 	    }
+	    return venueObjectArray;
 	  }
 	
 	  this.createEventObjects = function(rawEvents) {
