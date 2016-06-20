@@ -56,13 +56,55 @@ var ApiService = function() {
     request.send(null);
   };
 
+// var eventObject = {
+//   eventId: "",
+//   venueId: "",
+//   artist: "",
+//   startDate: "",
+//   endDate: "",
+//   startTime: ""
+// }
 
-  this.createEventObject = function(returnedData) {
-    
-  };
+// venueObject = {
+//   venueId: "",
+//   name: "",
+//   latLong: "",
+//   events = []
+// }
 
-  this.getEventInformation(eventId) {
 
+this.createVenueObjects = function(returnedData) {
+  var venueObjectArray = [];
+  var venueObject = {venueId: "", name: "", latLng: {lat: "", lng: ""}, events: ""};
+
+  var rawEvents = returnedData["_embedded"];
+
+  var eventObjectsArray = createEventObjects();
+
+  for(event of rawEvents) {
+    venueObject.venueId = event["_embedded"]["venues"][0].id;
+    venueObject.name = event["_embedded"]["venues"][0].name;
+    venueObject.latLng.lat = event["_embedded"]["venues"][0]["location"].latitude;
+    venueObject.latLng.lng = event["_embedded"]["venues"][0]["location"].longitude;
+    venueObject.events = eventObjectsArray;
+  }
+}
+
+  this.createEventObjects = function(rawEvents) {
+    var eventObjectArray = [];
+    var eventObject = {eventId: "", venueId: "", artist: "", startDate: "", startTime: ""}
+
+    var rawEvents = returnedData["_embedded"];
+    for(event of rawEvents) {
+      eventObject.eventId = event.id;
+      eventObject.venueId = event["_embedded"]["venues"][0].id;
+      eventObject.artist = event.artist;
+      eventObject.startDate = event["dates"]["start"].localDate;
+      eventObject.startTime = event["dates"]["start"].localTime;
+
+      eventObjectArray.push(eventObject)
+    }
+    return eventObjectArray;
   };
 
 };
