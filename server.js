@@ -12,6 +12,7 @@ app.use(express.static('client/build'));
 var MongoClient = require('mongodb').MongoClient
 
 
+
 // Connection URL
 var url = 'mongodb://localhost:27017/gigmapper';
 
@@ -21,6 +22,7 @@ app.get('/', function (req, res) {
 
 });
 
+<<<<<<< HEAD
 // we need an xml post for the api data that is being uploaded to the database - what data is being uploaded? user and events.
 
 
@@ -49,6 +51,7 @@ app.post('/users', function(req,res){
     db.close();
   });
 })
+
 
 
 
