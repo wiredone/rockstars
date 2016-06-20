@@ -18,6 +18,7 @@ var main = function() {
   var handleClick = function() {
     app.setProperties();
     app.findCityCoords()
+    apiService.setLatLng();
   };
 
   document.getElementById("form").addEventListener("submit", function(event) {
@@ -32,32 +33,28 @@ var main = function() {
       handleClick();
     });
   };
-
-  // user searches for venues in by city, dates and venue
-  // clicks button
-  // user may have to select city from drop-down
-  // input is used to set properties in apiservice
-  // url is created to use in request to api
-
-  // map recenters on city location
-  // map is populated with venue markers
-
-
-
-
-  
-
-  // coords = {lat: 55.9410457, lng: -3.2754235};
-  // var eService = new EventfulService(coords);
-  // var map = new GigMap(coords, 11);
-
-  // map.bindClick(function(coords) {
-  //   map.resetCenter(coords);
-  //   addVenueMarkers();
-  // });
-
 };
 
+
+// user searches for venues in by city, dates and venue
+// clicks button
+// user may have to select city from drop-down
+// input is used to set properties in apiservice
+// url is created to use in request to api
+
+// map recenters on city location
+// map is populated with venue markers
+
+
+
+// coords = {lat: 55.9410457, lng: -3.2754235};
+// var eService = new EventfulService(coords);
+// var map = new GigMap(coords, 11);
+
+// map.bindClick(function(coords) {
+//   map.resetCenter(coords);
+//   addVenueMarkers();
+// });
 
 // something like this???
   var getInfoWindowContent = function() {

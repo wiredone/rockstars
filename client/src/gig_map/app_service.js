@@ -43,6 +43,7 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
     this.cityGeocoder.getCoords(this.city, function(results) {
       if(result["lat"]) {
         this.map.resetCenter(results);
+        return results
       } else {
         createCitySelect(results);
       };
