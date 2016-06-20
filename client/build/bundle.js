@@ -160,7 +160,7 @@
 	  this.addMarker = function(coords, title) {
 	    var title = title.toString();
 	    var icon = {
-	      url: "../build/venue-icon.png",
+	      url: "./build/images/venue-icon.png",
 	      scaledSize: new google.maps.Size(50, 50),
 	    };
 	    var marker = new google.maps.Marker( {
@@ -178,7 +178,7 @@
 	    }
 	    this.markers.length = 0;
 	  };
-	  this.addInfoWindow = function(coords, title, content) {
+	  this.addInfoWindow = function(googleCoords, title, content) {
 	    var marker = this.addMarker(coords, title);
 	    var infowindow = new google.maps.InfoWindow( {
 	      content: content
@@ -255,7 +255,7 @@
 	
 	        callback(parsedData);
 	      };
-	    };
+	    }.bind(this);
 	    request.send(null);
 	  };
 	
@@ -268,21 +268,24 @@
 	
 	    var eventsArray = this.createEventObjects(rawEvents);
 	
-	    for(var event of rawEvents) {
+	    for(var event of rawEvents["events"]) {
 	      venueObject.venueId = event["_embedded"]["venues"][0].id;
 	      venueObject.name = event["_embedded"]["venues"][0].name;
 	      venueObject.latLng.lat = event["_embedded"]["venues"][0]["location"].latitude;
 	      venueObject.latLng.lng = event["_embedded"]["venues"][0]["location"].longitude;
 	      venueObject.events = eventsArray;
+	
+	      venueObjectArray.push(venueObject);
 	    }
+	    console.log(venueObjectArray);
 	    return venueObjectArray;
-	  }
+	  };
 	
 	  this.createEventObjects = function(rawEvents) {
 	    var eventObjectsArray = [];
 	    var eventObject = {eventId: "", venueId: "", artist: "", startDate: "", startTime: ""}
 	
-	    for(var event of rawEvents) {
+	    for(var event of rawEvents["events"]) {
 	      eventObject.eventId = event.id;
 	      eventObject.venueId = event["_embedded"]["venues"][0].id;
 	      eventObject.artist = event.artist;

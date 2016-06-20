@@ -53,7 +53,7 @@ var ApiService = function() {
 
         callback(parsedData);
       };
-    };
+    }.bind(this);
     request.send(null);
   };
 
@@ -66,21 +66,24 @@ var ApiService = function() {
 
     var eventsArray = this.createEventObjects(rawEvents);
 
-    for(var event of rawEvents) {
+    for(var event of rawEvents["events"]) {
       venueObject.venueId = event["_embedded"]["venues"][0].id;
       venueObject.name = event["_embedded"]["venues"][0].name;
       venueObject.latLng.lat = event["_embedded"]["venues"][0]["location"].latitude;
       venueObject.latLng.lng = event["_embedded"]["venues"][0]["location"].longitude;
       venueObject.events = eventsArray;
+
+      venueObjectArray.push(venueObject);
     }
+    console.log(venueObjectArray);
     return venueObjectArray;
-  }
+  };
 
   this.createEventObjects = function(rawEvents) {
     var eventObjectsArray = [];
     var eventObject = {eventId: "", venueId: "", artist: "", startDate: "", startTime: ""}
 
-    for(var event of rawEvents) {
+    for(var event of rawEvents["events"]) {
       eventObject.eventId = event.id;
       eventObject.venueId = event["_embedded"]["venues"][0].id;
       eventObject.artist = event.artist;
