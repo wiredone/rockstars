@@ -14,7 +14,7 @@ var GigMap = function(coords, zoom) {
   this.addMarker = function(coords, title) {
     var title = title.toString();
     var icon = {
-      url: "./build/images/venue-icon.png",
+      url: "./images/venue-icon.png",
       scaledSize: new google.maps.Size(50, 50),
     };
     var marker = new google.maps.Marker( {

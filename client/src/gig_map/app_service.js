@@ -25,8 +25,6 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
   this.setCity = function(citySelect) {
     if(citySelect) {
       this.city = this.getSelected(citySelect);
-      console.log(this.getSelected(citySelect));
-      console.log("city", this.city);
     } else {
     this.city = document.getElementById("city-input").value;
     };
@@ -34,7 +32,6 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
 
   this.setStartDate = function() {
     this.startDate = document.getElementById("start-date").value;
-    console.log("date in app:", document.getElementById("start-date").value);
   };
 
   this.setEndDate = function() {

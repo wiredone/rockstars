@@ -160,7 +160,7 @@
 	  this.addMarker = function(coords, title) {
 	    var title = title.toString();
 	    var icon = {
-	      url: "./build/images/venue-icon.png",
+	      url: "./images/venue-icon.png",
 	      scaledSize: new google.maps.Size(50, 50),
 	    };
 	    var marker = new google.maps.Marker( {
@@ -224,8 +224,6 @@
 	
 	
 	  this.setDates = function(startDate, endDate) {
-	    console.log(startDate);
-	    console.log(endDate);
 	    var startString = "&startDateTime=" + startDate + "T00:00:00Z&";
 	    var endString = "endDateTime=" + endDate + "T23:59:59Z&";
 	    this.dateRange = startString + endString;
@@ -234,9 +232,7 @@
 	
 	  this.createUrl = function() {
 	    var url = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=evSfYBzBfoEQwQq13yf0I0Po7YGf2Wcs";
-	    console.log(url);
 	    url = url + this.genre + this.latLong + this.dateRange;
-	    console.log(this.genre + this.latLong + this.dateRange);
 	    return url;
 	  };
 	
@@ -248,9 +244,8 @@
 	      if( request.status === 200 ) {
 	        console.log( "Data retrieved" );
 	        var jsonString = request.responseText;
-	        console.log(jsonString);
 	        var returnedData = JSON.parse(jsonString);
-	        console.log(this);
+	        console.log(returnedData);
 	        var parsedData = this.createVenueObjects(returnedData);
 	
 	        callback(parsedData);
@@ -262,38 +257,42 @@
 	
 	  this.createVenueObjects = function(returnedData) {
 	    var venueObjectArray = [];
-	    var venueObject = {venueId: "", name: "", latLng: {lat: "", lng: ""}, events: ""};
 	
 	    var rawEvents = returnedData["_embedded"];
 	
 	    var eventsArray = this.createEventObjects(rawEvents);
 	
 	    for(var event of rawEvents["events"]) {
+	      var venueObject = {venueId: "", name: "", latLng: {lat: "", lng: ""}, events: []};
 	      venueObject.venueId = event["_embedded"]["venues"][0].id;
 	      venueObject.name = event["_embedded"]["venues"][0].name;
 	      venueObject.latLng.lat = event["_embedded"]["venues"][0]["location"].latitude;
 	      venueObject.latLng.lng = event["_embedded"]["venues"][0]["location"].longitude;
-	      venueObject.events = eventsArray;
+	      for(var e of eventsArray){
+	        if(e["venueId"] === venueObject["venueId"])
+	          venueObject.events.push(e);
+	      };
 	
 	      venueObjectArray.push(venueObject);
-	    }
+	    };
 	    console.log(venueObjectArray);
 	    return venueObjectArray;
 	  };
 	
 	  this.createEventObjects = function(rawEvents) {
 	    var eventObjectsArray = [];
-	    var eventObject = {eventId: "", venueId: "", artist: "", startDate: "", startTime: ""}
 	
 	    for(var event of rawEvents["events"]) {
+	      var eventObject = {eventId: "", venueId: "", artist: "", startDate: "", startTime: ""}
 	      eventObject.eventId = event.id;
 	      eventObject.venueId = event["_embedded"]["venues"][0].id;
-	      eventObject.artist = event.artist;
+	      eventObject.artist = event.name;
 	      eventObject.startDate = event["dates"]["start"].localDate;
 	      eventObject.startTime = event["dates"]["start"].localTime;
 	
 	      eventObjectsArray.push(eventObject)
 	    }
+	    console.log(eventObjectsArray);
 	    return eventObjectsArray;
 	  };
 	
@@ -16805,8 +16804,6 @@
 	  this.setCity = function(citySelect) {
 	    if(citySelect) {
 	      this.city = this.getSelected(citySelect);
-	      console.log(this.getSelected(citySelect));
-	      console.log("city", this.city);
 	    } else {
 	    this.city = document.getElementById("city-input").value;
 	    };
@@ -16814,7 +16811,6 @@
 	
 	  this.setStartDate = function() {
 	    this.startDate = document.getElementById("start-date").value;
-	    console.log("date in app:", document.getElementById("start-date").value);
 	  };
 	
 	  this.setEndDate = function() {
