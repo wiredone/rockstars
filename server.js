@@ -7,6 +7,7 @@ var path = require('path')
 var app = express();
 
 app.use(express.static('client/build'));
+
 //splash and sign up and login
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
