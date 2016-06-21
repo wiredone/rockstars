@@ -4,7 +4,7 @@
    =============================== */
 /* General */
 body {
-  background: #f2f3ee url('../images/bg-title.gif') top left repeat;
+  background: #f2f3ee url('../images/bg-tile.gif') top left repeat;
   color: #4b2707;
   font-size: 14px;
   font-family:'Open Sans', 'Helvetica Neue', Helvetica, Ariel, sans-serif, 'Work Sans';
@@ -81,7 +81,7 @@ header form ul {
 
 header form ul li {
   display: inline-block;
-  padding: 0 10px;
+  padding: 0px;
 }
 
 header form ul li a {
@@ -108,11 +108,23 @@ header form ul li#logo a:hover {
   padding: 0;
   background: url('../images/logo-hover.png') center center no-repeat;
 }
+
+div.scroll {
+    background-color: #f2f3ee;
+    width: 600px;
+    height: 400px;
+    display: inline-block;
+    overflow: scroll;
+}
+
 /* Hero */
 
 #map {
-  height: 600px;
+  height: 400px;
   width: 600px;
+  display: inline-block;
+  /*margin-left: auto ;*/
+  /*margin-right: auto ;*/
 }
 
 #hero {
