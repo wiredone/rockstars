@@ -40,10 +40,8 @@ var ApiService = function() {
     request.open("GET", this.createUrl());
     request.onload = function() {
       if( request.status === 200 ) {
-        console.log( "Data retrieved" );
         var jsonString = request.responseText;
         var returnedData = JSON.parse(jsonString);
-        console.log(returnedData);
         var parsedData = this.createVenueObjects(returnedData);
 
         callback(parsedData);
@@ -54,6 +52,7 @@ var ApiService = function() {
 
 
   this.createVenueObjects = function(returnedData) {
+    console.log("returned", returnedData);
     var venueObjectArray = [];
 
     var rawEvents = returnedData["_embedded"];
@@ -64,8 +63,8 @@ var ApiService = function() {
       var venueObject = {venueId: "", name: "", latLng: {lat: "", lng: ""}, events: []};
       venueObject.venueId = event["_embedded"]["venues"][0].id;
       venueObject.name = event["_embedded"]["venues"][0].name;
-      venueObject.latLng.lat = event["_embedded"]["venues"][0]["location"].latitude;
-      venueObject.latLng.lng = event["_embedded"]["venues"][0]["location"].longitude;
+      venueObject.latLng.lat = parseFloat(event["_embedded"]["venues"][0]["location"].latitude);
+      venueObject.latLng.lng = parseFloat(event["_embedded"]["venues"][0]["location"].longitude);
       for(var e of eventsArray){
         if(e["venueId"] === venueObject["venueId"])
           venueObject.events.push(e);
@@ -74,7 +73,6 @@ var ApiService = function() {
       venueObjectArray.push(venueObject);
     };
     var uniqueVenueObjectArray = _.uniqBy(venueObjectArray, "venueId");
-    console.log(uniqueVenueObjectArray);
     return uniqueVenueObjectArray;
   };
 
@@ -91,7 +89,6 @@ var ApiService = function() {
 
       eventObjectsArray.push(eventObject)
     }
-    console.log(eventObjectsArray);
     return eventObjectsArray;
   };
 

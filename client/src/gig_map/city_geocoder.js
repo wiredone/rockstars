@@ -2,12 +2,12 @@ var _ = require("lodash");
 
 var CityGeocoder = function() {
   this.geocoder = new google.maps.Geocoder;
-  this.getCoords = function(city, callback) {
+  this.getCity = function(event, city, callback) {
     this.geocoder.geocode({"address": city}, function(results, status) {
       if (!status === google.maps.GeocoderStatus.OK) {
         window.alert("Geocoder failed due to: " + status);
       };
-      if(results.length > 1) {
+      if(event.target.id === "city-btn") {
         callback(this.listCities(results));
       } else {
         callback(results[0].geometry.location.toJSON());

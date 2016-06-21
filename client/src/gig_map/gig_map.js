@@ -4,10 +4,10 @@ var GigMap = function(coords, zoom) {
     center: coords,
     zoom: zoom
   });
-  this.convertCoords = function(coords) {
-    var googleCoords = { lat: coords["latitude"], lng: coord["longitude"] };
-    return googleCoord;
-  };   // not sure if required?
+  // this.convertCoords = function(coords) {
+  //   var googleCoords = { lat: coords["latitude"], lng: coord["longitude"] };
+  //   return googleCoord;
+  // };   // not sure if required?
   this.resetCenter = function(coords) {
     this.googleMap.setCenter(coords);
   };
@@ -32,7 +32,7 @@ var GigMap = function(coords, zoom) {
     }
     this.markers.length = 0;
   };
-  this.addInfoWindow = function(googleCoords, title, content) {
+  this.addInfoWindow = function(coords, title, content) {
     var marker = this.addMarker(coords, title);
     var infowindow = new google.maps.InfoWindow( {
       content: content
