@@ -16,6 +16,26 @@ var main = function() {
   var app = new GigMapperApp(map, cityGeocoder, apiService);
 
 
+  map.bindClick(function(coords) {
+    apiService.setLatLng(coords);
+    apiService.setDates(app.dateToday(), app.dateToday(7));
+    apiService.setGenre("rock");
+    getEvents();
+  });
+
+  var getEvents = function() {
+    map.removeMarkers();
+    apiService.getEvents(function(venues) {
+      for(var venue of venues) {
+        var venueHTML = venue.name;
+        for(var gig of venue.events) {
+          venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + gig.startDate + "<br>" + gig.startTime + "<br>";
+        };
+        map.addInfoWindow(venue.latLng, venue.name, venueHTML);
+      };
+    });
+  };
+
   document.getElementById("city-btn").addEventListener("click", function() {
       app.setCity();
       app.findCity(event, function() {
@@ -34,23 +54,16 @@ var main = function() {
   });
 
   document.getElementById("search-btn").addEventListener("click", function(event) {
-      app.setProperties();
-      app.findCity(event, function(coords) {
-        apiService.setLatLng(coords);
-        apiService.setDates(app.startDate, app.endDate);
-        apiService.setGenre(app.genre);
-        apiService.getEvents(function(venues) {
-          for(var venue of venues) {
-            console.log(venue);
-            var venueHTML = venue.name;
-            for(var gig of venue.events) {
-              venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + gig.startDate + "<br>" + gig.startTime + "<br>";
-            };
-            map.addInfoWindow(venue.latLng, venue.name, venueHTML);
-          };
-        });
-      });
+    app.setProperties();
+    app.findCity(event, function(coords) {
+      apiService.setLatLng(coords);
+      apiService.setDates(app.startDate, app.endDate);
+      apiService.setGenre(app.genre);
+      getEvents();
     });
+  });
+
+
 };
 
 

@@ -62,6 +62,26 @@
 	  var app = new GigMapperApp(map, cityGeocoder, apiService);
 	
 	
+	  map.bindClick(function(coords) {
+	    apiService.setLatLng(coords);
+	    apiService.setDates(app.dateToday(), app.dateToday(7));
+	    apiService.setGenre("rock");
+	    getEvents();
+	  });
+	
+	  var getEvents = function() {
+	    map.removeMarkers();
+	    apiService.getEvents(function(venues) {
+	      for(var venue of venues) {
+	        var venueHTML = venue.name;
+	        for(var gig of venue.events) {
+	          venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + gig.startDate + "<br>" + gig.startTime + "<br>";
+	        };
+	        map.addInfoWindow(venue.latLng, venue.name, venueHTML);
+	      };
+	    });
+	  };
+	
 	  document.getElementById("city-btn").addEventListener("click", function() {
 	      app.setCity();
 	      app.findCity(event, function() {
@@ -80,23 +100,16 @@
 	  });
 	
 	  document.getElementById("search-btn").addEventListener("click", function(event) {
-	      app.setProperties();
-	      app.findCity(event, function(coords) {
-	        apiService.setLatLng(coords);
-	        apiService.setDates(app.startDate, app.endDate);
-	        apiService.setGenre(app.genre);
-	        apiService.getEvents(function(venues) {
-	          for(var venue of venues) {
-	            console.log(venue);
-	            var venueHTML = venue.name;
-	            for(var gig of venue.events) {
-	              venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + gig.startDate + "<br>" + gig.startTime + "<br>";
-	            };
-	            map.addInfoWindow(venue.latLng, venue.name, venueHTML);
-	          };
-	        });
-	      });
+	    app.setProperties();
+	    app.findCity(event, function(coords) {
+	      apiService.setLatLng(coords);
+	      apiService.setDates(app.startDate, app.endDate);
+	      apiService.setGenre(app.genre);
+	      getEvents();
 	    });
+	  });
+	
+	
 	};
 	
 	
@@ -176,12 +189,14 @@
 	    var latString = _.toString(coords["lat"]);
 	    var longString = _.toString(coords["lng"]);
 	    this.latLong = "&latlong=" + latString + "," + longString + this.radius;
+	    console.log(coords);
 	  };
 	
 	
 	  this.setGenre = function(genre) {
 	    var genreString = _.toString(genre)
 	    this.genre = "&classificationName=" + genreString;
+	    console.log(genre);
 	  };
 	
 	
@@ -189,12 +204,15 @@
 	    var startString = "&startDateTime=" + startDate + "T00:00:00Z&";
 	    var endString = "endDateTime=" + endDate + "T23:59:59Z&";
 	    this.dateRange = startString + endString;
+	    console.log(startDate);
+	    console.log(endDate);
 	  };
 	
 	
 	  this.createUrl = function() {
 	    var url = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=evSfYBzBfoEQwQq13yf0I0Po7YGf2Wcs";
 	    url = url + this.genre + this.latLong + this.dateRange;
+	    console.log(url);
 	    return url;
 	  };
 	
@@ -216,17 +234,18 @@
 	
 	
 	  this.createVenueObjects = function(returnedData) {
-	    console.log("returned", returnedData);
 	    var venueObjectArray = [];
 	
 	    var rawEvents = returnedData["_embedded"];
-	
 	    var eventsArray = this.createEventObjects(rawEvents);
-	
+	    
 	    for(var event of rawEvents["events"]) {
-	      var venueObject = {venueId: "", name: "", latLng: {lat: "", lng: ""}, events: []};
+	      var venueObject = {venueId: "", name: "", address: {line1: "", city: "", postcode: ""}, latLng: {lat: "", lng: ""}, events: []};
 	      venueObject.venueId = event["_embedded"]["venues"][0].id;
 	      venueObject.name = event["_embedded"]["venues"][0].name;
+	      venueObject.address.line1 = event["_embedded"]["venues"][0]["address"].line1;
+	      venueObject.address.city = event["_embedded"]["venues"][0]["city"].name;
+	      venueObject.address.postcode = event["_embedded"]["venues"][0].postalCode;
 	      venueObject.latLng.lat = parseFloat(event["_embedded"]["venues"][0]["location"].latitude);
 	      venueObject.latLng.lng = parseFloat(event["_embedded"]["venues"][0]["location"].longitude);
 	      for(var e of eventsArray){
@@ -243,13 +262,20 @@
 	  this.createEventObjects = function(rawEvents) {
 	    var eventObjectsArray = [];
 	
+	    if(!rawEvents) {
+	      window.alert("No events found");
+	    };
+	
 	    for(var event of rawEvents["events"]) {
-	      var eventObject = {eventId: "", venueId: "", artist: "", startDate: "", startTime: ""}
+	      var eventObject = {eventId: "", venueId: "", artist: "", startDate: "", startTime: "", ticketSaleDates: {onSaleFrom: "", onSaleUntil: ""}}
 	      eventObject.eventId = event.id;
+	
 	      eventObject.venueId = event["_embedded"]["venues"][0].id;
 	      eventObject.artist = event.name;
 	      eventObject.startDate = event["dates"]["start"].localDate;
 	      eventObject.startTime = event["dates"]["start"].localTime;
+	      eventObject.ticketSaleDates.oneSaleFrom = event["sales"]["public"].startDateTime;
+	      eventObject.ticketSaleDates.oneSaleUntil = event["sales"]["public"].endDateTime;
 	
 	      eventObjectsArray.push(eventObject)
 	    }
@@ -16746,28 +16772,17 @@
 	  this.map = map;
 	  this.cityGeocoder = cityGeocoder;
 	  this.apiService = apiService;
-	  // this.location = {};
-	  // this.userId = "";
-	  // this.events = [];
 	
 	  this.setProperties = function(citySelect) {
-	    if(citySelect) {
-	      this.setCity(citySelect);
-	    } else {
 	    this.setCity();
-	    };
 	    this.setGenre();
 	    this.setStartDate();
 	    this.setEndDate();
 	  };
 	
 	  this.setCity = function(citySelect) {
-	    if(citySelect) {
-	      this.city = this.getSelected(citySelect);
-	    } else {
 	    this.city = document.getElementById("city-input").value;
 	    };
-	  };
 	
 	  this.setStartDate = function() {
 	    this.startDate = document.getElementById("start-date").value;
@@ -16800,6 +16815,9 @@
 	
 	  this.createCitySelect = function(cities) {
 	    var citySelect = document.getElementById("city-drop");
+	    while(citySelect.firstChild) {
+	      citySelect.removeChild(citySelect.firstChild);
+	    };
 	    for(var city of cities) {
 	      var option = document.createElement("option");
 	      option.value = city;
@@ -16810,6 +16828,27 @@
 	
 	  this.updateCity = function(citySelect) {
 	    document.getElementById("city-input").value = this.getSelected(citySelect);
+	  };
+	
+	  this.dateToday = function(numDays) {
+	
+	  var today = new Date();
+	  if(numDays) {
+	    var dd = today.getDate() + numDays;
+	  } else {
+	    var dd = today.getDate()
+	  };
+	  var mm = today.getMonth()+1; //January is 0!
+	  var yyyy = today.getFullYear();
+	  if(dd<10) {
+	      dd = "0" + dd
+	  } 
+	  if(mm<10) {
+	      mm = "0" + mm
+	  } 
+	  today = yyyy + "-" + mm + "-" + dd;
+	  _.toString(today);
+	  return today
 	  };
 	
 	};

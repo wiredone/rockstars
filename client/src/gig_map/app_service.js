@@ -7,28 +7,17 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
   this.map = map;
   this.cityGeocoder = cityGeocoder;
   this.apiService = apiService;
-  // this.location = {};
-  // this.userId = "";
-  // this.events = [];
 
   this.setProperties = function(citySelect) {
-    if(citySelect) {
-      this.setCity(citySelect);
-    } else {
     this.setCity();
-    };
     this.setGenre();
     this.setStartDate();
     this.setEndDate();
   };
 
   this.setCity = function(citySelect) {
-    if(citySelect) {
-      this.city = this.getSelected(citySelect);
-    } else {
     this.city = document.getElementById("city-input").value;
     };
-  };
 
   this.setStartDate = function() {
     this.startDate = document.getElementById("start-date").value;
@@ -61,6 +50,9 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
 
   this.createCitySelect = function(cities) {
     var citySelect = document.getElementById("city-drop");
+    while(citySelect.firstChild) {
+      citySelect.removeChild(citySelect.firstChild);
+    };
     for(var city of cities) {
       var option = document.createElement("option");
       option.value = city;
@@ -71,6 +63,27 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
 
   this.updateCity = function(citySelect) {
     document.getElementById("city-input").value = this.getSelected(citySelect);
+  };
+
+  this.dateToday = function(numDays) {
+
+  var today = new Date();
+  if(numDays) {
+    var dd = today.getDate() + numDays;
+  } else {
+    var dd = today.getDate()
+  };
+  var mm = today.getMonth()+1; //January is 0!
+  var yyyy = today.getFullYear();
+  if(dd<10) {
+      dd = "0" + dd
+  } 
+  if(mm<10) {
+      mm = "0" + mm
+  } 
+  today = yyyy + "-" + mm + "-" + dd;
+  _.toString(today);
+  return today
   };
 
 };
