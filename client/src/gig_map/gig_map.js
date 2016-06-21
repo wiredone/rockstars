@@ -5,6 +5,7 @@ var GigMap = function(coords, zoom) {
     zoom: zoom
   });
   this.resetCenter = function(coords) {
+    this.googleMap.setZoom(11);
     this.googleMap.setCenter(coords);
   };
   this.addMarker = function(coords, title) {

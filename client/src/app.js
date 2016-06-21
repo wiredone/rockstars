@@ -9,8 +9,8 @@ var GigMapperApp = require("./gig_map/app_service.js");
 
 var main = function() {
 
-  var coords = {lat: 40.7053111, lng: -74.258188};
-  var map = new GigMap(coords, 10);
+  var coords = {lat: 39.8282172, lng: -99.139815};
+  var map = new GigMap(coords, 4);
   var cityGeocoder = new CityGeocoder();
   var locator = new GeoLocator(map);
   var apiService = new ApiService();
