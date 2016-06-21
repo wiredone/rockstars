@@ -36,7 +36,7 @@ var main = function() {
       for(var venue of venues) {
         var venueHTML = venue.name;
         for(var gig of venue.events) {
-          venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + app.formatDate(gig.startDate) + "<br>" + app.formatTime(gig.startTime) + "<br>";
+          venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + app.formatDate(gig.startDate) + "<br>" + app.formatTime(gig.startTime) + "<br><a href='/orders/new'><button type='button'>Buy Tickets</button><br></a>";
         };
         map.addInfoWindow(venue.latLng, venue.name, venueHTML);
       };
@@ -56,18 +56,15 @@ var main = function() {
       app.updateCity(event.target);
   });
 
-  // document.getElementById("form").addEventListener("submit", function(event) {
-  //   event.preventDefault();
-    document.getElementById("search-btn").addEventListener("click", function(event) {
-      app.setProperties();
-      app.findCity(event, function(coords) {
-        apiService.setLatLng(coords);
-        apiService.setDates(app.startDate, app.endDate);
-        apiService.setGenre(app.genre);
-        getEvents();
-      });
+  document.getElementById("search-btn").addEventListener("click", function(event) {
+    app.setProperties();
+    app.findCity(event, function(coords) {
+      apiService.setLatLng(coords);
+      apiService.setDates(app.startDate, app.endDate);
+      apiService.setGenre(app.genre);
+      getEvents();
     });
-  // });
+  });
 
   document.getElementById("geo-loc").addEventListener("click", function() {
     locator.findCoords(function(coords) {

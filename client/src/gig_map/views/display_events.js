@@ -14,6 +14,7 @@ var DisplayEvents = function(app) {
         ul.appendChild(this.createLi("Date: ", this.app.formatDate(gig.startDate)));
         ul.appendChild(this.createLi("Time: ", this.app.formatTime(gig.startTime)));
         ul.appendChild(this.createLi("Venue: ", venueName));
+        ul.appendChild(this.createBtn());
       };
     };
   };
@@ -22,6 +23,18 @@ var DisplayEvents = function(app) {
     var li = document.createElement("li");
     li.innerText = header + content;
     return li;
+  };
+
+  this.createBtn = function() {
+    var btn = document.createElement("button");
+    btn.setAttribute("type", "button");
+    btn.innerText = "Buy Tickets";
+
+    var a = document.createElement("a");
+    a.setAttribute("href", "/orders/new");
+    a.appendChild(btn);
+
+    return a;
   };
 
 };
