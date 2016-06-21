@@ -47,15 +47,15 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
     this.genre = this.getSelected(genreSelect);
   };
 
-  this.findCityCoords = function(callback) {
-    this.cityGeocoder.getCoords(this.city, function(results) {
+  this.findCity = function(event, callback) {
+    this.cityGeocoder.getCity(event, this.city, function(results) {
       if(!Array.isArray(results)) {
         this.map.resetCenter(results);
         callback(results);
       } else {
         this.createCitySelect(results);
         callback();
-      };
+      }
     }.bind(this));
   };
 
@@ -69,10 +69,9 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
     };
   };
 
-  // this.updateCity = function(citySelect) {
-  //   this.city = this.getSelected(citySelect);
-  //   console.log("got here", this.city);
-  // };
+  this.updateCity = function(citySelect) {
+    document.getElementById("city-input").value = this.getSelected(citySelect);
+  };
 
 };
 
