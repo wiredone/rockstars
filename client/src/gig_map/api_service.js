@@ -12,14 +12,12 @@ var ApiService = function() {
     var latString = _.toString(coords["lat"]);
     var longString = _.toString(coords["lng"]);
     this.latLong = "&latlong=" + latString + "," + longString + this.radius;
-    console.log(coords);
   };
 
 
   this.setGenre = function(genre) {
     var genreString = _.toString(genre)
     this.genre = "&classificationName=" + genreString;
-    console.log(genre);
   };
 
 
@@ -27,8 +25,6 @@ var ApiService = function() {
     var startString = "&startDateTime=" + startDate + "T00:00:00Z&";
     var endString = "endDateTime=" + endDate + "T23:59:59Z&";
     this.dateRange = startString + endString;
-    console.log(startDate);
-    console.log(endDate);
   };
 
 

@@ -4,10 +4,6 @@ var GigMap = function(coords, zoom) {
     center: coords,
     zoom: zoom
   });
-  // this.convertCoords = function(coords) {
-  //   var googleCoords = { lat: coords["latitude"], lng: coord["longitude"] };
-  //   return googleCoord;
-  // };   // not sure if required?
   this.resetCenter = function(coords) {
     this.googleMap.setCenter(coords);
   };

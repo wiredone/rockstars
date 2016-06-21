@@ -12,16 +12,21 @@ var main = function() {
   var coords = {lat: 40.7053111, lng: -74.258188};
   var map = new GigMap(coords, 10);
   var cityGeocoder = new CityGeocoder();
+  var locator = new GeoLocator(map);
   var apiService = new ApiService();
   var app = new GigMapperApp(map, cityGeocoder, apiService);
 
 
   map.bindClick(function(coords) {
-    apiService.setLatLng(coords);
-    apiService.setDates(app.dateToday(), app.dateToday(7));
-    apiService.setGenre("rock");
-    getEvents();
+    setGet(coords);
   });
+
+  var setGet = function(coords) {
+    apiService.setLatLng(coords);
+    apiService.setDates(app.dateToday(), app.dateToday(75));
+    apiService.setGenre("");
+    getEvents();
+  };
 
   var getEvents = function() {
     map.removeMarkers();
@@ -60,6 +65,12 @@ var main = function() {
       apiService.setDates(app.startDate, app.endDate);
       apiService.setGenre(app.genre);
       getEvents();
+    });
+  });
+
+  document.getElementById("geo-loc").addEventListener("click", function() {
+    locator.findCoords(function(coords) {
+      setGet(coords);
     });
   });
 
