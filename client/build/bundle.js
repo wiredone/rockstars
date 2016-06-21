@@ -49,6 +49,7 @@
 	var GeoLocator = __webpack_require__(5);
 	var CityGeocoder = __webpack_require__(6);
 	var GigMapperApp = __webpack_require__(7);
+	var DisplayEvents = __webpack_require__(8);
 	// var AccountService = require("./gig_map/account_service.js");
 	// var OrderService = require("./gig_map/order_service.js");
 	
@@ -61,10 +62,11 @@
 	  var locator = new GeoLocator(map);
 	  var apiService = new ApiService();
 	  var app = new GigMapperApp(map, cityGeocoder, apiService);
-	
+	  var eventsDisplay = new DisplayEvents(app);
 	
 	  map.bindClick(function(coords) {
 	    setGet(coords);
+	    map.resetCenter(coords);
 	  });
 	
 	  var setGet = function(coords) {
@@ -80,10 +82,11 @@
 	      for(var venue of venues) {
 	        var venueHTML = venue.name;
 	        for(var gig of venue.events) {
-	          venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + gig.startDate + "<br>" + gig.startTime + "<br>";
+	          venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + app.formatDate(gig.startDate) + "<br>" + app.formatTime(gig.startTime) + "<br>";
 	        };
 	        map.addInfoWindow(venue.latLng, venue.name, venueHTML);
 	      };
+	      eventsDisplay.render(venues);
 	    });
 	  };
 	
@@ -99,20 +102,18 @@
 	      app.updateCity(event.target);
 	  });
 	
-	  document.getElementById("form").addEventListener("submit", function(event) {
-	      event.preventDefault();
-	      handleClick();
-	  });
-	
-	  document.getElementById("search-btn").addEventListener("click", function(event) {
-	    app.setProperties();
-	    app.findCity(event, function(coords) {
-	      apiService.setLatLng(coords);
-	      apiService.setDates(app.startDate, app.endDate);
-	      apiService.setGenre(app.genre);
-	      getEvents();
+	  // document.getElementById("form").addEventListener("submit", function(event) {
+	  //   event.preventDefault();
+	    document.getElementById("search-btn").addEventListener("click", function(event) {
+	      app.setProperties();
+	      app.findCity(event, function(coords) {
+	        apiService.setLatLng(coords);
+	        apiService.setDates(app.startDate, app.endDate);
+	        apiService.setGenre(app.genre);
+	        getEvents();
+	      });
 	    });
-	  });
+	  // });
 	
 	  document.getElementById("geo-loc").addEventListener("click", function() {
 	    locator.findCoords(function(coords) {
@@ -16850,15 +16851,62 @@
 	  } 
 	  if(mm<10) {
 	      mm = "0" + mm
-	  } 
+	  }
+	
 	  today = yyyy + "-" + mm + "-" + dd;
 	  _.toString(today);
 	  return today
 	  };
 	
+	  this.formatDate = function(date) {
+	    var splitDate = _.split(date, "-");
+	    var newDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+	    return newDate;
+	  };
+	
+	  this.formatTime = function(time) {
+	    var splitTime = _.split(time, ":");
+	    var newTime = splitTime[0] + ":" + splitTime[1];
+	    return newTime;
+	  };
+	
 	};
 	
 	module.exports = GigMapperApp;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	var DisplayEvents = function(app) {
+	  this.app = app;
+	
+	  this.render = function(venues) {
+	    var div = document.getElementById("scroll");
+	
+	    for(var venue of venues) {
+	      console.log(venues);
+	      var venueName = venue.name;
+	      for(var gig of venue.events) {
+	        var ul = document.createElement("ul");
+	        div.appendChild(ul);
+	        ul.appendChild(this.createLi("Artist: ", gig.artist));
+	        ul.appendChild(this.createLi("Date: ", this.app.formatDate(gig.startDate)));
+	        ul.appendChild(this.createLi("Time: ", this.app.formatTime(gig.startTime)));
+	        ul.appendChild(this.createLi("Venue: ", venueName));
+	      };
+	    };
+	  };
+	
+	  this.createLi = function (header, content) {
+	    var li = document.createElement("li");
+	    li.innerText = header + content;
+	    return li;
+	  };
+	
+	};
+	
+	module.exports = DisplayEvents;
 
 /***/ }
 /******/ ]);

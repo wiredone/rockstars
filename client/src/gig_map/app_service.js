@@ -80,10 +80,23 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
   } 
   if(mm<10) {
       mm = "0" + mm
-  } 
+  }
+
   today = yyyy + "-" + mm + "-" + dd;
   _.toString(today);
   return today
+  };
+
+  this.formatDate = function(date) {
+    var splitDate = _.split(date, "-");
+    var newDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+    return newDate;
+  };
+
+  this.formatTime = function(time) {
+    var splitTime = _.split(time, ":");
+    var newTime = splitTime[0] + ":" + splitTime[1];
+    return newTime;
   };
 
 };
