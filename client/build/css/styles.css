@@ -2,7 +2,6 @@
    Author: Team Rockstar
    Date:   19-6-16
    =============================== */
-
 /* General */
 body {
   background: #f2f3ee url('../images/bg-title.gif') top left repeat;
@@ -12,16 +11,12 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
-
 .container {
   width: 924px;
   margin: 0 auto;
   padding: 30px 24px;
 }
-
-
 /* Typography */
-
 h1, h2 {
   color: #f24d02;
   font-size: 40px;
@@ -30,49 +25,39 @@ h1, h2 {
   font-family: 'Work Sans', sans-serif;', cursive;
   margin: 0;
 }
-
 h1 {
   text-align: center;
   padding: 0 0 20px;
   background: url('../images/header-divider.png') bottom center no-repeat;
 }
-
 h1 em {
   font-style: normal;
   color: #4b2707;
 }
-
 h2 {
   font-size: 34px;
 }
-
 h3 {
   margin: 0;
 }
-
 p.lead {
   font-size: 30px;
   font-weight: 300;
   text-align: center;
   margin: 10px 0;
 }
-
 p {
   margin: 0;
 }
-
 a:link {
   color: #d17f38;
 }
-
 a:visited {
   color: #d17f38;
 }
-
 a:hover {
   color: #4b2707;
 }
-
 hr {
   border: none;
   height: 33px;
@@ -80,141 +65,115 @@ hr {
   margin: 30px auto;
   background: url('../images/divider.png') center center no-repeat;
 }
-
 /* Header */
-
-header nav {
+header form {
   text-align: center;
 }
-
-header nav ul {
+header form ul {
   margin: 0;
   padding: 0;
   list-style: none;
   display: block;
   line-height: 141px;
 }
-
-header nav ul li {
+header form ul li {
   display: inline-block;
   padding: 0 10px;
 }
-
-header nav ul li a {
+header form ul li a {
     text-transform: uppercase;
     text-decoration: none;
     font-weight: bold;
-
 }
-
-header nav ul li a:hover {
+header form ul li a:hover {
   color #4b2707;
   padding-top: 20px;
   background: url('../images/tiny-pointer.png') top center no-repeat;
 }
-
-header nav ul li#logo a {
+header form ul li#logo a {
   display: block;
   width: 292px;
   height: 141px;
   background: url('../images/logo.png') center center no-repeat;
   text-indent: -9999px;
 }
-
-header nav ul li#logo a:hover {
+header form ul li#logo a:hover {
   padding: 0;
   background: url('../images/logo-hover.png') center center no-repeat;
 }
-
 /* Hero */
-
+#map {
+  height: 600px;
+  width: 600px;
+}
 #hero {
   background: #e8c04f url('../images/bg-tile-black.gif') top left repeat;
 }
-
 #hero .container {
   position: relative;
 }
-
 #story-excerpt {
   width: 530px;
   margin-right: 24px;
   float: left;
   font-size: 16px;
 }
-
 #best-events {
   background: url('../images/pointer.png') left center no-repeat;
   padding: 30px 0 30px 130px;
   float: left;
   width: 240px;
 }
-
 /* Music & Venues */
-
 #articles {
   width: 370px;
   float: left;
   margin-right: 24px;
 }
-
 #feature-image {
   width: 530px;
   float: left;
 }
-
 #news-events article {
   margin: 20px 0;
   padding-left: 55px;
 }
-
 #news-events article.news {
   background: url('../images/icon-pointer1.png') top left no-repeat;
 }
-
 #news-events article.event {
   background: url('../images/icon-pointer2.png') top left no-repeat;
 }
-
 #news-events header time {
   color: #d17f38;
   font-size: 12px;
 }
-
 #news-events section.excerpt {
   margin: 10px 0;
 }
-
 #news-events footer {
   font-size: 12px;
 }
-
 /* Footer */
-
 footer.main {
   background: #4b2707 url('../images/bg-tile-orange.gif') top left repeat;
   color: #f2f3ee;
   padding: 30px 0;
 }
-
 #copyright, #credits {
   width: 240px;
   float: left;
   padding: 10px 0 10px 50px;
 }
-
 #copyright {
   background: url('../images/icon-star1.png') center left no-repeat;
 }
-
 #credits {
   background: url('../images/icon-star2.png') center left no-repeat;
   float: right;
   margin-top: 5px;
 }
-
 /* Force Elements to Self Clear its Children: http://css-tricks.com/snippets/css/clear-fix/ */
-
 .clearfix:after {
   visibility: hidden;
   display: block;

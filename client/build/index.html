@@ -1,65 +1,62 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfERxvotuACmtrlTpUo675GubOeVf7pg0"></script>
+    <script src="bundle.js"></script>
     <title>Gigmapper Team Rockstar</title>
     <meta name="description" content="Gig-Mapper is a Music/Events Search App.">
     <!-- Google Fonts integration: http://www.google.com/fonts -->
   <!--  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700,300|Love+Ya+Like+A+Sister' rel='stylesheet' type='text/css'> -->
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/styles.css">
   </head>
   <body>
-
     <div class="container">
       <header class="main">
-        <nav>
           <h2>Gigmapper.rocks</h2>
+          <form id="form">
           <ul class="clearfix">
             <li><a href="">City</a></li>
-                  <input type="text" placeholder="Enter City">
+                  <input type="text" placeholder="Enter City" id="city-input">
                  <!--  <input type="submit" class="btn btn-small" value="Search"> -->
             <li><a href="">Genre</a></li>
-                  <input type="text" placeholder="Select Genre">
+                  <select name="genre" id="genre-drop">
+                    <option value="rock">Rock</option>
+                    <option value="latin">Latin</option>
+                  </select>
                  <!--  <input type="submit" class="btn btn-small" value="Search"> -->
             <li><a href="">Start Date</a></li>
-            <input type="date" placeholder="date" id="date">
+            <input type="date" placeholder="date" id="start-date">
             <li><a href="">End Date</a></li>
-            <input type="date" placeholder="date" id="date">
+            <input type="date" placeholder="date" id="end-date">
+            <li><a href="">City:</a></li>
+            <select name="city" id="city-drop">
+            </select>
           </ul>
-        </nav>
+          <button type="button" id="search-btn">Search</button>
+        </form>
       </header>
     </div><!-- end container -->
-
-    <script>
     <div class="map" id="map"></div>
-        </script><!-- end of map -->
-
-    <div id="hero">
+ <!--    <div id="hero">
     <div class="map" id="map"></div>
       <div class="container">
-        <img src="images/splash.png" alt="Gig-mapper">
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfERxvotuACmtrlTpUo675GubOeVf7pg0"></script>
-      </div><!-- end container -->
-    </div><!-- end hero -->
-
-
+        <img src="images/splash.png" alt="Gig-mapper"> -->
+      <!-- </div> --><!-- end container -->
+    <!-- </div> --><!-- end hero -->
     <div class="container">
       <div id="whole-story" class="clearfix">
         <h1>The <em>GigMapper</em> App</h1>
         <p class="lead">Let us help you find <strong>Events</strong> around you!</p>
-
         <div id="story-excerpt">
           <p>Search Gigmapper for music and events that span practically every genre. Whether you've got a soft spot for new wave synthpop or if alternative rock is more your sound, we've got it covered. From blaring bagpipes to refined chamber music, search for music festivals and events. <a href="">Read more about our app here.</a></p>
         </div><!-- end story-excerpt -->
-
         <div id="best-events">
           <h3>Local Events Near You</h3>
           <p>Well, look at that! We were voted #1 event finder in wired.com for 2016.</p>
         </div><!-- end best-events -->
       </div><!-- end story-excerpt -->
-
       <hr>
-
       <div id="news-events" class="clearfix">
         <div id="articles">
           <h2>Search Local Music &amp; Events</h2>
@@ -68,55 +65,42 @@
               <h3>Search for Music Events June 2016</h3>
               <time datetime="2016-06-16">June 16, 2016</time>
             </header>
-
             <section class="excerpt">
               <p>All Concerts Alternative and Indie Clubs and Dance Country/Folk Hard Rock/Metal Jazz/Blues R&B/Urban Soul Rap and Hip-Hop Rock/Pop Tribute Bands World More Music <a href="">More Info &rarr;</a></p>
             </section>
-
             <footer>
               Posted under <a href="">Search Events</a>
             </footer>
           </article>
-
           <article class="event">
             <header>
               <h3>Search Venues</h3>
               <time datetime="2016-09-16">Sept 15, 2016</time>
             </header>
-
             <section class="excerpt">
               <p>Search live music venues by city and state and review venue information such as booking agents, capacity numbers, photos and videos. <a href="">More Info &rarr;</a></p>
             </section>
-
             <footer>
               Posted under <a href="">Search Venues</a>
             </footer>
           </article>
         </div><!-- end articles -->
-
         <div id="feature-image">
           <img src="images/googlemap.png" alt="gigmap">
         </div><!-- end feature-image -->
-
       </div><!-- end news-events -->
-
       <hr>
-
     </div><!-- end container -->
-    
 
     <footer class="main">
       <div class="container clearfix">
-
         <div id="copyright">
           <p>Copyright &copy;<strong>2016</strong></p>
           <!-- <p>Please recycle this code responsibly</p> -->
         </div><!-- end uncopyright -->
-
         <div id="credits">
           <p>coded by Team <strong>Rockstar</strong></a></p>
         </div><!-- end credits -->
-
       </div><!-- end container -->
     </footer>
   </body>
