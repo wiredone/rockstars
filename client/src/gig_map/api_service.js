@@ -2,17 +2,16 @@ var _ = require('lodash');
 
 var ApiService = function() {
 
-  this.url = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=evSfYBzBfoEQwQq13yf0I0Po7YGf2W";
-  this.radius = "&radius=2&unit=miles";
+  this.radius = "&radius=10&unit=miles";
   this.latLong = "";
   this.genre = "";
   this.dateRange = "";
 
 
-  this.setLatLng = function(lat, long) {
-    var latString = _.toString(lat);
-    var longString = _.toString(long);
-    this.latLong = "&latlong=" + latString + "," + longString + this.radius + "&";
+  this.setLatLng = function(coords) {
+    var latString = _.toString(coords["lat"]);
+    var longString = _.toString(coords["lng"]);
+    this.latLong = "&latlong=" + latString + "," + longString + this.radius;
   };
 
 
@@ -23,70 +22,76 @@ var ApiService = function() {
 
 
   this.setDates = function(startDate, endDate) {
-    var startString = "startDateTime=" + startDate + "T00:00:00Z&";
+    var startString = "&startDateTime=" + startDate + "T00:00:00Z&";
     var endString = "endDateTime=" + endDate + "T23:59:59Z&";
-    this.dateRange = startString + endString
+    this.dateRange = startString + endString;
   };
 
 
   this.createUrl = function() {
-    if(this.setGenre) {
-      this.url = this.url + this.genre + this.latLong + this.setDates;
-    } else {
-      this.url = this.url + "&classificationName=music" + this.latLong + this.setDates;
-    }
+    var url = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=evSfYBzBfoEQwQq13yf0I0Po7YGf2Wcs";
+    url = url + this.genre + this.latLong + this.dateRange;
+    return url;
   };
 
 
   this.getEvents = function(callback) {
     var request = new XMLHttpRequest();
-    request.open("GET", this.url);
+    request.open("GET", this.createUrl());
     request.onload = function() {
       if( request.status === 200 ) {
         console.log( "Data retrieved" );
         var jsonString = request.responseText;
-        console.log(jsonString);
         var returnedData = JSON.parse(jsonString);
-
-        var parsedData = createVenueObjects(returnedData);
+        console.log(returnedData);
+        var parsedData = this.createVenueObjects(returnedData);
 
         callback(parsedData);
       };
-    };
+    }.bind(this);
     request.send(null);
   };
 
 
   this.createVenueObjects = function(returnedData) {
     var venueObjectArray = [];
-    var venueObject = {venueId: "", name: "", latLng: {lat: "", lng: ""}, events: ""};
 
     var rawEvents = returnedData["_embedded"];
 
-    var eventsArray = createEventObjects(rawEvents);
+    var eventsArray = this.createEventObjects(rawEvents);
 
-    for(event of rawEvents) {
+    for(var event of rawEvents["events"]) {
+      var venueObject = {venueId: "", name: "", latLng: {lat: "", lng: ""}, events: []};
       venueObject.venueId = event["_embedded"]["venues"][0].id;
       venueObject.name = event["_embedded"]["venues"][0].name;
       venueObject.latLng.lat = event["_embedded"]["venues"][0]["location"].latitude;
       venueObject.latLng.lng = event["_embedded"]["venues"][0]["location"].longitude;
-      venueObject.events = eventsArray;
-    }
-  }
+      for(var e of eventsArray){
+        if(e["venueId"] === venueObject["venueId"])
+          venueObject.events.push(e);
+      };
+
+      venueObjectArray.push(venueObject);
+    };
+    var uniqueVenueObjectArray = _.uniqBy(venueObjectArray, "venueId");
+    console.log(uniqueVenueObjectArray);
+    return uniqueVenueObjectArray;
+  };
 
   this.createEventObjects = function(rawEvents) {
     var eventObjectsArray = [];
-    var eventObject = {eventId: "", venueId: "", artist: "", startDate: "", startTime: ""}
 
-    for(event of rawEvents) {
+    for(var event of rawEvents["events"]) {
+      var eventObject = {eventId: "", venueId: "", artist: "", startDate: "", startTime: ""}
       eventObject.eventId = event.id;
       eventObject.venueId = event["_embedded"]["venues"][0].id;
-      eventObject.artist = event.artist;
+      eventObject.artist = event.name;
       eventObject.startDate = event["dates"]["start"].localDate;
       eventObject.startTime = event["dates"]["start"].localTime;
 
       eventObjectsArray.push(eventObject)
     }
+    console.log(eventObjectsArray);
     return eventObjectsArray;
   };
 

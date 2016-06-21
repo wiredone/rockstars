@@ -66,9 +66,11 @@ hr {
   background: url('../images/divider.png') center center no-repeat;
 }
 /* Header */
+
 header form {
   text-align: center;
 }
+
 header form ul {
   margin: 0;
   padding: 0;
@@ -76,20 +78,24 @@ header form ul {
   display: block;
   line-height: 141px;
 }
+
 header form ul li {
   display: inline-block;
   padding: 0 10px;
 }
+
 header form ul li a {
     text-transform: uppercase;
     text-decoration: none;
     font-weight: bold;
 }
+
 header form ul li a:hover {
   color #4b2707;
   padding-top: 20px;
   background: url('../images/tiny-pointer.png') top center no-repeat;
 }
+
 header form ul li#logo a {
   display: block;
   width: 292px;
@@ -97,15 +103,18 @@ header form ul li#logo a {
   background: url('../images/logo.png') center center no-repeat;
   text-indent: -9999px;
 }
+
 header form ul li#logo a:hover {
   padding: 0;
   background: url('../images/logo-hover.png') center center no-repeat;
 }
 /* Hero */
+
 #map {
   height: 600px;
   width: 600px;
 }
+
 #hero {
   background: #e8c04f url('../images/bg-tile-black.gif') top left repeat;
 }
