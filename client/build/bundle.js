@@ -97,6 +97,44 @@
 	        });
 	      });
 	    });
+	
+	
+	
+	
+	
+	
+	  // Get the modal
+	  var modal = document.getElementById('myModal');
+	
+	  // Get the button that opens the modal
+	  var btn = document.getElementById("myBtn");
+	
+	  // Get the <span> element that closes the modal
+	  var span = document.getElementsByClassName("close")[0];
+	
+	  // When the user clicks on the button, open the modal 
+	  btn.onclick = function() {
+	      modal.style.display = "block";
+	  }
+	
+	  // When the user clicks on <span> (x), close the modal
+	  span.onclick = function() {
+	      modal.style.display = "none";
+	  }
+	
+	  // When the user clicks anywhere outside of the modal, close it
+	  window.onclick = function(event) {
+	      if (event.target == modal) {
+	          modal.style.display = "none";
+	      }
+	  }
+	
+	
+	
+	
+	
+	
+	
 	};
 	
 	
@@ -107,11 +145,22 @@
 /***/ function(module, exports) {
 
 	var GigMap = function(coords, zoom) {
+	  
+	  // var styles = [{"featureType":"road","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"hue":149},{"saturation":-78},{"lightness":0}]},{"featureType":"road.highway","stylers":[{"hue":-31},{"saturation":-40},{"lightness":2.8}]},{"featureType":"poi","elementType":"label","stylers":[{"visibility":"off"}]},{"featureType":"landscape","stylers":[{"hue":163},{"saturation":-26},{"lightness":-1.1}]},{"featureType":"transit","stylers":[{"visibility":"off"}]},{"featureType":"water","stylers":[{"hue":3},{"saturation":-24.24},{"lightness":-38.57}]}]
+	
+	  var styles = [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#e85113"}]},{"featureType":"administrative","elementType":"labels.text.stroke","stylers":[{"color":"#ffffff"},{"weight":6}]},{"featureType":"landscape","elementType":"all","stylers":[{"lightness":20},{"color":"#efe9e4"}]},{"featureType":"landscape","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"landscape.man_made","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"geometry","stylers":[{"visibility":"on"},{"color":"#f0e4d3"}]},{"featureType":"poi","elementType":"labels","stylers":[{"visibility":"simplified"}]},{"featureType":"poi","elementType":"labels.text.fill","stylers":[{"hue":"#11ff00"}]},{"featureType":"poi","elementType":"labels.text.stroke","stylers":[{"lightness":100}]},{"featureType":"poi","elementType":"labels.icon","stylers":[{"hue":"#4cff00"},{"saturation":58}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"lightness":-100}]},{"featureType":"road","elementType":"labels.text.stroke","stylers":[{"lightness":100}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#efe9e4"},{"lightness":-25}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#efe9e4"},{"lightness":-40}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#efe9e4"},{"lightness":-10}]},{"featureType":"road.arterial","elementType":"geometry.stroke","stylers":[{"color":"#efe9e4"},{"lightness":-20}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#19a0d8"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"lightness":-100}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"lightness":100}]}]
+	
+	
+	
+	
+	
+	
 	  this.markers = [];
 	  this.googleMap = new google.maps.Map(document.getElementById("map"), {
 	    center: coords,
 	    zoom: zoom
 	  });
+	  this.googleMap.setOptions({styles: styles});
 	  // this.convertCoords = function(coords) {
 	  //   var googleCoords = { lat: coords["latitude"], lng: coord["longitude"] };
 	  //   return googleCoord;
@@ -216,17 +265,20 @@
 	
 	
 	  this.createVenueObjects = function(returnedData) {
-	    console.log("returned", returnedData);
+	  
 	    var venueObjectArray = [];
 	
 	    var rawEvents = returnedData["_embedded"];
 	
 	    var eventsArray = this.createEventObjects(rawEvents);
-	
+	    console.log(rawEvents);
 	    for(var event of rawEvents["events"]) {
-	      var venueObject = {venueId: "", name: "", latLng: {lat: "", lng: ""}, events: []};
+	      var venueObject = {venueId: "", name: "", address: {line1: "", city: "", postcode: ""}, latLng: {lat: "", lng: ""}, events: []};
 	      venueObject.venueId = event["_embedded"]["venues"][0].id;
 	      venueObject.name = event["_embedded"]["venues"][0].name;
+	      venueObject.address.line1 = event["_embedded"]["venues"][0]["address"].line1
+	      venueObject.address.city = event["_embedded"]["venues"][0]["city"].name
+	      venueObject.address.postcode = event["_embedded"]["venues"][0].postalCode;
 	      venueObject.latLng.lat = parseFloat(event["_embedded"]["venues"][0]["location"].latitude);
 	      venueObject.latLng.lng = parseFloat(event["_embedded"]["venues"][0]["location"].longitude);
 	      for(var e of eventsArray){
@@ -244,12 +296,14 @@
 	    var eventObjectsArray = [];
 	
 	    for(var event of rawEvents["events"]) {
-	      var eventObject = {eventId: "", venueId: "", artist: "", startDate: "", startTime: ""}
+	      var eventObject = {eventId: "", venueId: "", artist: "", startDate: "", startTime: "", ticketSaleDates: {onSaleFrom: "", onSaleUntil: ""}}
 	      eventObject.eventId = event.id;
 	      eventObject.venueId = event["_embedded"]["venues"][0].id;
 	      eventObject.artist = event.name;
 	      eventObject.startDate = event["dates"]["start"].localDate;
 	      eventObject.startTime = event["dates"]["start"].localTime;
+	      eventObject.ticketSaleDates.oneSaleFrom = event["sales"]["public"].startDateTime;
+	      eventObject.ticketSaleDates.oneSaleUntil = event["sales"]["public"].endDateTime;
 	
 	      eventObjectsArray.push(eventObject)
 	    }
