@@ -73,8 +73,9 @@ var ApiService = function() {
 
       venueObjectArray.push(venueObject);
     };
-    console.log(venueObjectArray);
-    return venueObjectArray;
+    var uniqueVenueObjectArray = _.uniqBy(venueObjectArray, "venueId");
+    console.log(uniqueVenueObjectArray);
+    return uniqueVenueObjectArray;
   };
 
   this.createEventObjects = function(rawEvents) {
