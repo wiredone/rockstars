@@ -1,4 +1,4 @@
-var GigMapperApp = function(map, cityGeocoder, apiService) {
+var GigMapperApp = function(map, cityGeocoder, apiService, eventsDisplay, dt) {
 
   this.city = "";
   this.startDate = "";
@@ -7,6 +7,14 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
   this.map = map;
   this.cityGeocoder = cityGeocoder;
   this.apiService = apiService;
+  this.display = eventsDisplay;
+  this.dt = dt;
+
+  this.getUserName = function() {
+    var currentUser = JSON.parse(localStorage.getItem("user"));
+    var p = document.getElementById("user");
+    p.innerText = _.upperFirst(currentUser.login);
+  };
 
   this.setProperties = function(citySelect) {
     this.setCity();
@@ -59,12 +67,25 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
       option.text = city;
       citySelect.appendChild(option);
     };
-    var citySelectDiv = document.getElementById("drop");
-    citySelectDiv.style.visibility = "visible";
   };
 
   this.updateCity = function(citySelect) {
     document.getElementById("city-input").value = this.getSelected(citySelect);
+  };
+
+  this.setGetApi = function(coords) {
+    this.apiService.setLatLng(coords);
+    this.apiService.setDates(dt.dateToday(), dt.dateToday(75));
+    this.apiService.setGenre("");
+    this.getEvents();
+  };
+
+  this.getEvents = function() {
+    map.removeMarkers();
+    this.apiService.getEvents(function(venues) {
+      this.display.createInfoWindow(venues);
+      this.display.createEventList(venues);
+    }.bind(this));
   };
   
 };

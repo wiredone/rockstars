@@ -22,8 +22,10 @@ var DateTime = function() {
   };
 
   this.formatDate = function(date) {
+    console.log("date in", date);
     var splitDate = _.split(date, "-");
     var newDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+    console.log("date out", newDate);
     return newDate;
   };
 

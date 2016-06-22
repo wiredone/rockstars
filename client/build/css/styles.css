@@ -303,3 +303,13 @@ footer.main {
 #rockstars-footer {
   text-align: left;
 }
+
+/*.hide-me {
+  visibility: hidden;
+}*/
+
+#user {
+  font-size: 2em;
+  font-weight: 700;
+  text-decoration: none;
+}
