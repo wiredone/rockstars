@@ -3,6 +3,7 @@
 <head>
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/payment.css">
 
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfERxvotuACmtrlTpUo675GubOeVf7pg0"></script>
   <script src="bundle.js"></script>
@@ -20,7 +21,7 @@
           <center><img src="images/logo.png" alt="Gigmapper"></center>
 
       <nav class="navbar">
-      <a id="user"</a>
+      <p id="user"></p>
       <a href="user">Logout</a>
       <!-- <a href="user">My Account</a>
       <a href="users">Admin</a> -->
@@ -64,41 +65,6 @@
 
 <div class="map" id="map"></div>
 
-
-
-
-
-
-
-<!-- Trigger/Open The Modal -->
-<button id="myBtn">Open Modal</button>
-
-<!-- The Modal -->
-<div id="myModal" class="modal">
-
-<!-- Modal content -->
-<div class="modal-content">
-  <div class="modal-header">
-    <span class="close">×</span>
-    <h2>Venue Name</h2>
-  </div>
-  <div class="modal-body">
-    <p>Event details</p>
-    <p>Further event details</p>
-  </div>
-  <div class="modal-footer">
-    <h3 id="rockstars-footer">Brought to you by the Rockstars</h3>
-  </div>
-</div>
-
-</div>
-
-
-
-
-
-<h3>Artist Information</h3>
-<div class="scroll">Artist information and other things will go here,
 <!-- <h3>Artist Information</h3> -->
 <div id="scroll"></div>
   <!--    <div id="hero">
@@ -156,6 +122,17 @@
     </div><!-- end news-events -->
     <hr>
   </div><!-- end container -->
+
+  <!-- payment -->
+  <div id="openModal" class="modalDialog">
+    <div>
+      <a href="#close" title="Close" class="close">X</a>
+      <h2>Gigmapper Payment Gateway</h2>
+      <p>Your purchase was successful.</p>
+      <p>Please check your email for ticket confirmation and event details.</p>
+      <p>Thank You For using Gigmapper Payment Services.</p>
+    </div>
+  </div>
 
   <footer class="main">
     <div class="container clearfix">
