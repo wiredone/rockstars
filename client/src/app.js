@@ -10,7 +10,6 @@ var DateTime = require("./gig_map/date_time.js");
 
 var main = function() {
 
-  var user = new User(userId);
   var coords = {lat: 39.8282172, lng: -99.139815};
   var map = new GigMap(coords, 4);
   var dt = new DateTime();
@@ -25,9 +24,9 @@ var main = function() {
     var url = window.location.href;
     var splitUrl = _.split(url, "=");
     var userId = splitUrl[1];
-    
+    var user = new User(userId);
     user.getUser(function() {
-    app.getUserName();
+      app.getUserName();
     });
   } else {
     app.getUserName();
