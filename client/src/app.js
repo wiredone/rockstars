@@ -70,9 +70,6 @@ var main = function() {
     locator.findCoords(function(coords) {
       setGet(coords);
     });
-<<<<<<< HEAD
-
-
 
 
 
@@ -107,9 +104,7 @@ var main = function() {
 
 
 
-=======
   });
->>>>>>> develop
 
 
 };
