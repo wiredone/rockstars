@@ -13,11 +13,15 @@
 
 </head>
 <body>
+
   <div class="container">
     <header class="main">
-      <h2>Gigmapper.rocks</h2>
-      <a href="login">Login</a>
+      <div class="content">
+          <center><img src="images/logo.png" alt="Gigmapper"></center>
+    <nav class="nav">
+      <a href="logout">Logout</a>
       <a href="user">My Account</a>
+      <a href="users">Admin</a>
     </nav>
     <form id="form">
       <ul class="clearfix">
@@ -30,7 +34,14 @@
         <li><a href="">Genre</a></li>
         <select name="genre" id="genre-drop">
           <option value="rock">Rock</option>
-          <option value="latin">Latin</option>
+          <option value="latin">Pop</option>
+          <option value="latin">Jazz</option>
+          <option value="latin">Blues</option>
+          <option value="latin">Classical</option>
+          <option value="latin">Rap</option>
+          <option value="latin">Metal</option>
+          <option value="latin">Country</option>
+          <option value="latin">Electronic</option>
         </select>
         <!--  <input type="submit" class="btn btn-small" value="Search"> -->
         <li><a href="">Date</a></li>
@@ -50,8 +61,43 @@
 
 <div class="map" id="map"></div>
 
+
+
+
+
+
+
+<!-- Trigger/Open The Modal -->
+<button id="myBtn">Open Modal</button>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+<!-- Modal content -->
+<div class="modal-content">
+  <div class="modal-header">
+    <span class="close">×</span>
+    <h2>Venue Name</h2>
+  </div>
+  <div class="modal-body">
+    <p>Event details</p>
+    <p>Further event details</p>
+  </div>
+  <div class="modal-footer">
+    <h3 id="rockstars-footer">Brought to you by the Rockstars</h3>
+  </div>
+</div>
+
+</div>
+
+
+
+
+
 <h3>Artist Information</h3>
 <div class="scroll">Artist information and other things will go here,
+<!-- <h3>Artist Information</h3> -->
+<div id="scroll">Artist information and other things will go here,
   Artist information and other things will go here, Artist information and other things will go here,
   Artist information and other things will go here, Artist information and other things will go here,
   Artist information and other things will go here, Artist information and other things will go here,</div>
