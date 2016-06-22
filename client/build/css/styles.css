@@ -110,6 +110,10 @@ header form ul li#logo a:hover {
   background: url('../images/logo-hover.png') center center no-repeat;
 }
 
+.navbar {
+  text-align: right;
+}
+
 #scroll {
     /* background-color: #f2f3ee; */
     width: 575px;
@@ -117,6 +121,10 @@ header form ul li#logo a:hover {
     display: inline-block;
     overflow: scroll;
     /* float: right; */
+}
+
+#scroll ul {
+  list-style: none;
 }
 
 /* Hero */
