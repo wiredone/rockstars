@@ -1,0 +1,13 @@
+db.users.update({"_id":ObjectId("56...")},
+{$push:{messages:{_id:ObjectId(), message:"I am message 2."}}});
+
+
+db.users.update({"_id": ObjectId("57685b11eae7f6f16573b7df")},
+             {$push: {
+                        "orders":{_id:ObjectId(),
+                        "numberOfTickets":2,
+                        "dateOfPurchase":"2015-10-02T11:00:00Z",
+                        "price":14 }
+                      }
+             }
+             )
