@@ -45,33 +45,34 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var GigMap = __webpack_require__(1);
-	var User = __webpack_require__(2);
-	var ApiService = __webpack_require__(3);
-	var GeoLocator = __webpack_require__(6);
-	var CityGeocoder = __webpack_require__(7);
-	var GigMapperApp = __webpack_require__(8);
-	var DisplayEvents = __webpack_require__(9);
+	var User = __webpack_require__(9);
+	var ApiService = __webpack_require__(2);
+	var GeoLocator = __webpack_require__(5);
+	var CityGeocoder = __webpack_require__(6);
+	var GigMapperApp = __webpack_require__(7);
+	var DisplayEvents = __webpack_require__(8);
 	// var AccountService = require("./gig_map/account_service.js");
 	// var OrderService = require("./gig_map/order_service.js");
 	
 	var main = function() {
 	
+	  var getUserName = function() {
+	    var currentUser = JSON.parse(localStorage.getItem("user"));
+	    var p = document.getElementById("user");
+	    p.innerText = currentUser.login;
+	  };
 	
 	  if(!JSON.parse(localStorage.getItem("user"))) {
-	   var url = window.location.href;
-	  // console.log(url);
-	   var splitUrl = _.split(url, "=");
-	   var userId = splitUrl[1];
-	  // console.log(splitUrl[1]);
-	   var user = new User(userId);
-	   user.getUser();
-	 }
-	
-	
-	  // var user = JSON.parse(localStorage.getItem("user");
-	  // var p = document.getElementById("user");
-	  //   p.innerText=user.name;
-	
+	    var url = window.location.href;
+	    var splitUrl = _.split(url, "=");
+	    var userId = splitUrl[1];
+	    var user = new User(userId);
+	    user.getUser(function() {
+	    getUserName();
+	    });
+	  } else {
+	    getUserName();
+	  };
 	
 	  var coords = {lat: 39.8282172, lng: -99.139815};
 	  var map = new GigMap(coords, 4);
@@ -137,31 +138,31 @@
 	
 	
 	
-	  // Get the modal
-	  var modal = document.getElementById('myModal');
+	  // // Get the modal
+	  // var modal = document.getElementById('myModal');
 	
-	  // Get the button that opens the modal
-	  var btn = document.getElementById("myBtn");
+	  // // Get the button that opens the modal
+	  // var btn = document.getElementById("myBtn");
 	
-	  // Get the <span> element that closes the modal
-	  var span = document.getElementsByClassName("close")[0];
+	  // // Get the <span> element that closes the modal
+	  // var span = document.getElementsByClassName("close")[0];
 	
-	  // When the user clicks on the button, open the modal
-	  btn.onclick = function() {
-	      modal.style.display = "block";
-	  }
+	  // // When the user clicks on the button, open the modal
+	  // btn.onclick = function() {
+	  //     modal.style.display = "block";
+	  // }
 	
-	  // When the user clicks on <span> (x), close the modal
-	  span.onclick = function() {
-	      modal.style.display = "none";
-	  }
+	  // // When the user clicks on <span> (x), close the modal
+	  // span.onclick = function() {
+	  //     modal.style.display = "none";
+	  // }
 	
-	  // When the user clicks anywhere outside of the modal, close it
-	  window.onclick = function(event) {
-	      if (event.target == modal) {
-	          modal.style.display = "none";
-	      }
-	  }
+	  // // When the user clicks anywhere outside of the modal, close it
+	  // window.onclick = function(event) {
+	  //     if (event.target == modal) {
+	  //         modal.style.display = "none";
+	  //     }
+	  // }
 	
 	
 	
@@ -235,39 +236,9 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
-
-	
-	//just incase gigmapper.rocks/user/:id
-	
-	var User = function(userId) {
-	  this.userid = userId
-	  this.url = "http://localhost:3000/user/" + this.userid
-	//  console.log(this.url); //THIS IS A CONSOLE LOG
-	  this.getUser = function() {
-	    var request = new XMLHttpRequest();
-	    console.log(request);
-	    request.open("GET", this.url);
-	    request.onload = function() {
-	      console.log("here!");
-	      if (request.status === 200) {
-	        var user = request.responseText;
-	        console.log("are we getting here?" + user);
-	        localStorage.setItem("user", user);
-	        };
-	      }
-	    request.send(null);
-	  };
-	}
-	
-	module.exports = User;
-
-
-/***/ },
-/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(4);
+	var _ = __webpack_require__(3);
 	
 	var ApiService = function() {
 	
@@ -376,7 +347,7 @@
 	module.exports = ApiService;
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -16784,10 +16755,10 @@
 	  }
 	}.call(this));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module), (function() { return this; }())))
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -16803,7 +16774,7 @@
 
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports) {
 
 	var GeoLocator = function(map) {
@@ -16820,10 +16791,10 @@
 	module.exports = GeoLocator;
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(4);
+	var _ = __webpack_require__(3);
 	
 	var CityGeocoder = function() {
 	  this.geocoder = new google.maps.Geocoder;
@@ -16850,7 +16821,7 @@
 	module.exports = CityGeocoder;
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	var GigMapperApp = function(map, cityGeocoder, apiService) {
@@ -16915,7 +16886,7 @@
 	      citySelect.appendChild(option);
 	    };
 	    var citySelectDiv = document.getElementById("drop");
-	    citySelectDiv.style.visibility = "visible";
+	    // citySelectDiv.style.visibility = "visible";
 	  };
 	
 	  this.updateCity = function(citySelect) {
@@ -16961,7 +16932,7 @@
 	module.exports = GigMapperApp;
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports) {
 
 	var DisplayEvents = function(app) {
@@ -16987,13 +16958,15 @@
 	
 	  this.createLi = function (header, content) {
 	    var li = document.createElement("li");
-	    li.innerText = header + content;
+	    li.setAttribute("class", "event-li");
+	    li.innerHTML = "<em><b>" + header + "</em></b>" + content;
 	    return li;
 	  };
 	
 	  this.createBtn = function() {
 	    var btn = document.createElement("button");
 	    btn.setAttribute("type", "button");
+	    btn.setAttribute("class", "tkt-btn");
 	    btn.innerText = "Buy Tickets";
 	
 	    var a = document.createElement("a");
@@ -17006,6 +16979,34 @@
 	};
 	
 	module.exports = DisplayEvents;
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	
+	//just incase gigmapper.rocks/user/:id
+	
+	var User = function(userId) {
+	  this.userid = userId;
+	  this.url = "http://localhost:3000/user/" + this.userid;
+	  this.getUser = function(callback) {
+	    var request = new XMLHttpRequest();
+	    request.open("GET", this.url);
+	    request.onload = function() {
+	      if (request.status === 200) {
+	        var user = request.responseText;
+	        localStorage.setItem("user", user);
+	        callback();
+	        };
+	      }
+	    request.send(null);
+	  };
+	}
+	
+	module.exports = User;
+
 
 /***/ }
 /******/ ]);

@@ -60,7 +60,7 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
       citySelect.appendChild(option);
     };
     var citySelectDiv = document.getElementById("drop");
-    citySelectDiv.style.visibility = "visible";
+    // citySelectDiv.style.visibility = "visible";
   };
 
   this.updateCity = function(citySelect) {
