@@ -4,9 +4,9 @@
    =============================== */
 /* General */
 body {
-  background: #f2f3ee url('../images/bg-tile.gif') top left repeat;
+  /*background: #f2f3ee url('../images/bg-tile.gif') top left repeat;*/
   color: #4b2707;
-  font-size: 14px;
+  font-size: 13px;
   font-family:'Open Sans', 'Helvetica Neue', Helvetica, Ariel, sans-serif, 'Work Sans';
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -76,7 +76,7 @@ header form ul {
   padding: 0;
   list-style: none;
   display: block;
-  line-height: 141px;
+  line-height: 50px;
 }
 
 header form ul li {
@@ -85,7 +85,7 @@ header form ul li {
 }
 
 header form ul li a {
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     text-decoration: none;
     font-weight: bold;
 }
@@ -109,22 +109,24 @@ header form ul li#logo a:hover {
   background: url('../images/logo-hover.png') center center no-repeat;
 }
 
-div.scroll {
-    background-color: #f2f3ee;
-    width: 600px;
+#scroll {
+    /* background-color: #f2f3ee; */
+    width: 575px;
     height: 400px;
     display: inline-block;
     overflow: scroll;
+    /* float: right; */
 }
 
 /* Hero */
 
 #map {
-  height: 400px;
   width: 600px;
+  height: 400px;
   display: inline-block;
   /*margin-left: auto ;*/
   /*margin-right: auto ;*/
+  /*float: left;*/
 }
 
 #hero {
