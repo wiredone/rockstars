@@ -21,13 +21,15 @@ var DisplayEvents = function(app) {
 
   this.createLi = function (header, content) {
     var li = document.createElement("li");
-    li.innerText = header + content;
+    li.setAttribute("class", "event-li");
+    li.innerHTML = "<em><b>" + header + "</em></b>" + content;
     return li;
   };
 
   this.createBtn = function() {
     var btn = document.createElement("button");
     btn.setAttribute("type", "button");
+    btn.setAttribute("class", "tkt-btn");
     btn.innerText = "Buy Tickets";
 
     var a = document.createElement("a");
