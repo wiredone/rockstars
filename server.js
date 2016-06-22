@@ -21,6 +21,7 @@ var url = 'mongodb://localhost:27017/gigmapper';
 app.get('/', function (req, res) {
   var cached = localStorage.getItem("user_ids"); //doesnae trigger
   console.log(cached); //doesnae trigger
+
   res.send('id: ' + req.query.id);
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
