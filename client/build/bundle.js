@@ -82,7 +82,7 @@
 	      for(var venue of venues) {
 	        var venueHTML = venue.name;
 	        for(var gig of venue.events) {
-	          venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + app.formatDate(gig.startDate) + "<br>" + app.formatTime(gig.startTime) + "<br>";
+	          venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + app.formatDate(gig.startDate) + "<br>" + app.formatTime(gig.startTime) + "<br><a href='/orders/new'><button type='button'>Buy Tickets</button><br></a>";
 	        };
 	        map.addInfoWindow(venue.latLng, venue.name, venueHTML);
 	      };
@@ -102,18 +102,15 @@
 	      app.updateCity(event.target);
 	  });
 	
-	  // document.getElementById("form").addEventListener("submit", function(event) {
-	  //   event.preventDefault();
-	    document.getElementById("search-btn").addEventListener("click", function(event) {
-	      app.setProperties();
-	      app.findCity(event, function(coords) {
-	        apiService.setLatLng(coords);
-	        apiService.setDates(app.startDate, app.endDate);
-	        apiService.setGenre(app.genre);
-	        getEvents();
-	      });
+	  document.getElementById("search-btn").addEventListener("click", function(event) {
+	    app.setProperties();
+	    app.findCity(event, function(coords) {
+	      apiService.setLatLng(coords);
+	      apiService.setDates(app.startDate, app.endDate);
+	      apiService.setGenre(app.genre);
+	      getEvents();
 	    });
-	  // });
+	  });
 	
 	  document.getElementById("geo-loc").addEventListener("click", function() {
 	    locator.findCoords(function(coords) {
@@ -16830,6 +16827,8 @@
 	      option.text = city;
 	      citySelect.appendChild(option);
 	    };
+	    var citySelectDiv = document.getElementById("drop");
+	    citySelectDiv.style.visibility = "visible";
 	  };
 	
 	  this.updateCity = function(citySelect) {
@@ -16894,19 +16893,35 @@
 	        ul.appendChild(this.createLi("Date: ", this.app.formatDate(gig.startDate)));
 	        ul.appendChild(this.createLi("Time: ", this.app.formatTime(gig.startTime)));
 	        ul.appendChild(this.createLi("Venue: ", venueName));
+	        ul.appendChild(this.createBtn());
 	      };
 	    };
 	  };
 	
 	  this.createLi = function (header, content) {
 	    var li = document.createElement("li");
-	    li.innerText = header + content;
+	    li.setAttribute("class", "event-li");
+	    li.innerHTML = "<em><b>" + header + "</em></b>" + content;
 	    return li;
+	  };
+	
+	  this.createBtn = function() {
+	    var btn = document.createElement("button");
+	    btn.setAttribute("type", "button");
+	    btn.setAttribute("class", "tkt-btn");
+	    btn.innerText = "Buy Tickets";
+	
+	    var a = document.createElement("a");
+	    a.setAttribute("href", "/orders/new");
+	    a.appendChild(btn);
+	
+	    return a;
 	  };
 	
 	};
 	
 	module.exports = DisplayEvents;
+
 
 /***/ }
 /******/ ]);
