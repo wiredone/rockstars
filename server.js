@@ -34,34 +34,12 @@ app.get('/user', function(req, res) {
 
 //api request for user data, inc id.
 app.get('/user/:id', function(req, res) {
-//  console.log("got here too");
-  // MongoClient.connect(url, function(err, db) {
-  // var collection = db.collection('users');
-  // //  res.send('id: ' + req.query.id);
-  // console.log("params" + req.params.id);
-  // var userId = req.params.id;
-  // console.log( "_id:" + ObjectId(userId) );
-  // collection.findOne({_id: ObjectId(userId)},null, function(err, docs) {
-  // console.log("user hunt result: " + docs);
-  // res.json(docs);
-  // db.close();
-  // });
-  // // res.sendFile(path.join(__dirname + '/client/build/myaccount.html'));
-  // });  //we want to see an object.
   MongoClient.connect(url, function(err, db) {
     var collection = db.collection('users');
     collection.find({"_id": ObjectId(req.params.id)}).toArray(function(err, docs) {
-      // for (var user of docs ) {
-      //   console.log("label 54", user._id);
-      //   console.log("label 55", req.params.id);
-      //   if(user._id === req.params.id){
-      //     console.log( user);
-      //
-      //     res.json(user);
-      //   }
-      // }
-      console.log(docs[0]);
-      res.json(docs);
+      var user = docs[0];
+      res.json(user);
+      console.log(user);
       db.close();
     });
   });
@@ -88,7 +66,6 @@ app.post('/users', function(req, res) {
     var collection = db.collection('users');
     var objectToInsert = req.body;
     collection.insert(objectToInsert, function(err) {
-    // if (err) return;
       var objectid = objectToInsert._id;
       res.redirect('/?user_id=' + objectid);
     });

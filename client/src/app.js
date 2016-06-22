@@ -10,22 +10,23 @@ var DisplayEvents = require("./gig_map/views/display_events.js");
 
 var main = function() {
 
+  var getUserName = function() {
+    var currentUser = JSON.parse(localStorage.getItem("user"));
+    var p = document.getElementById("user");
+    p.innerText = currentUser.login;
+  };
 
   if(!JSON.parse(localStorage.getItem("user"))) {
-   var url = window.location.href;
-  // console.log(url);
-   var splitUrl = _.split(url, "=");
-   var userId = splitUrl[1];
-  // console.log(splitUrl[1]);
-   var user = new User(userId);
-   user.getUser();
- }
-
-
-  // var user = JSON.parse(localStorage.getItem("user");
-  // var p = document.getElementById("user");
-  //   p.innerText=user.name;
-
+    var url = window.location.href;
+    var splitUrl = _.split(url, "=");
+    var userId = splitUrl[1];
+    var user = new User(userId);
+    user.getUser(function() {
+    getUserName();
+    });
+  } else {
+    getUserName();
+  };
 
   var coords = {lat: 39.8282172, lng: -99.139815};
   var map = new GigMap(coords, 4);
