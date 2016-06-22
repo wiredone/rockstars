@@ -53,11 +53,12 @@ var ApiService = function() {
 
 
   this.createVenueObjects = function(returnedData) {
+
     var venueObjectArray = [];
 
     var rawEvents = returnedData["_embedded"];
     var eventsArray = this.createEventObjects(rawEvents);
-    
+
     for(var event of rawEvents["events"]) {
       var venueObject = {venueId: "", name: "", address: {line1: "", city: "", postcode: ""}, latLng: {lat: "", lng: ""}, events: []};
       venueObject.venueId = event["_embedded"]["venues"][0].id;
