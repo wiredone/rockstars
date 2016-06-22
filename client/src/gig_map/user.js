@@ -1,10 +1,11 @@
 // creating a user object
-// var LocalStorage = require('node-localstorage').LocalStorage,
-// localStorage = new LocalStorage('./scratch');
+
+// var user = JSON.stringify(user);
+//    localStorage.setItem("user", user);
 
 var User = function(userid){
   this.userid = userid
   this.getUser{
-    ajx request
+  //  ajx request
   }
 }
