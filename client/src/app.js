@@ -1,4 +1,5 @@
 var GigMap = require("./gig_map/gig_map.js");
+var User = require("./gig_map/user.js");
 var ApiService = require("./gig_map/api_service.js");
 var GeoLocator = require("./gig_map/geolocator.js");
 var CityGeocoder = require("./gig_map/city_geocoder.js");
@@ -7,8 +8,25 @@ var DisplayEvents = require("./gig_map/views/display_events.js");
 // var AccountService = require("./gig_map/account_service.js");
 // var OrderService = require("./gig_map/order_service.js");
 
-
 var main = function() {
+
+
+  if(!JSON.parse(localStorage.getItem("user"))) {
+   var url = window.location.href;
+   console.log(url);
+   var splitUrl = _.split(url, "=");
+   var userId = splitUrl[1];
+   console.log(splitUrl[1]);
+   var user = new User(userId);
+   user.getUser();
+ }
+
+var user.name = "intheory"
+
+ var user = JSON.parse(localStorage.getItem("user")
+ var p = document.getElementById("user")
+ p.innerText=user.name
+
 
   var coords = {lat: 39.8282172, lng: -99.139815};
   var map = new GigMap(coords, 4);
@@ -83,7 +101,7 @@ var main = function() {
   // Get the <span> element that closes the modal
   var span = document.getElementsByClassName("close")[0];
 
-  // When the user clicks on the button, open the modal 
+  // When the user clicks on the button, open the modal
   btn.onclick = function() {
       modal.style.display = "block";
   }
