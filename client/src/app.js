@@ -13,19 +13,18 @@ var main = function() {
 
   if(!JSON.parse(localStorage.getItem("user"))) {
    var url = window.location.href;
-   console.log(url);
+  // console.log(url);
    var splitUrl = _.split(url, "=");
    var userId = splitUrl[1];
-   console.log(splitUrl[1]);
+  // console.log(splitUrl[1]);
    var user = new User(userId);
    user.getUser();
  }
 
-var user.name = "intheory"
 
- var user = JSON.parse(localStorage.getItem("user")
- var p = document.getElementById("user")
- p.innerText=user.name
+  // var user = JSON.parse(localStorage.getItem("user");
+  // var p = document.getElementById("user");
+  //   p.innerText=user.name;
 
 
   var coords = {lat: 39.8282172, lng: -99.139815};

@@ -50,16 +50,18 @@ app.get('/user/:id', function(req, res) {
   // });  //we want to see an object.
   MongoClient.connect(url, function(err, db) {
     var collection = db.collection('users');
-    collection.find({}).toArray(function(err, docs) {
-      for (var user of docs ) {
-        console.log("label 54", user._id);
-        console.log("label 55", req.params.id);
-        if(user._id === req.params.id){
-          console.log( user);
-
-          res.json(user);
-        }
-      }
+    collection.find({"_id": ObjectId(req.params.id)}).toArray(function(err, docs) {
+      // for (var user of docs ) {
+      //   console.log("label 54", user._id);
+      //   console.log("label 55", req.params.id);
+      //   if(user._id === req.params.id){
+      //     console.log( user);
+      //
+      //     res.json(user);
+      //   }
+      // }
+      console.log(docs[0]);
+      res.json(docs);
       db.close();
     });
   });
