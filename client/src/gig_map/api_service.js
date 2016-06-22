@@ -22,6 +22,8 @@ var ApiService = function() {
 
 
   this.setDates = function(startDate, endDate) {
+    console.log(startDate);
+    console.log(endDate);
     var startString = "&startDateTime=" + startDate + "T00:00:00Z&";
     var endString = "endDateTime=" + endDate + "T23:59:59Z&";
     this.dateRange = startString + endString;
@@ -53,7 +55,7 @@ var ApiService = function() {
 
 
   this.createVenueObjects = function(returnedData) {
-
+    console.log(returnedData);
     var venueObjectArray = [];
 
     var rawEvents = returnedData["_embedded"];

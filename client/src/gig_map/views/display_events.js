@@ -1,18 +1,32 @@
-var DisplayEvents = function(app) {
-  this.app = app;
+var _ = require('lodash');
 
-  this.render = function(venues) {
-    var div = document.getElementById("scroll");
+var DisplayEvents = function(dt, map) {
+  this.dt = dt;
+  this.map = map;
 
+  this.createInfoWindow = function(venues) {
+    var venueHTML = "";
     for(var venue of venues) {
-      console.log(venues);
+      for(var gig of venue.events) {
+        var venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + dt.formatDate(gig.startDate) + "<br>" + dt.formatTime(gig.startTime) + "<br>" + this.createBtnString() + "<br>";
+      };
+      this.map.addInfoWindow(venue.latLng, venue.name, venueHTML);
+    };
+  };
+
+  this.createEventList = function(venues) {
+    var div = document.getElementById("scroll");
+    var ul = document.createElement("ul");
+    for(var venue of venues) {
       var venueName = venue.name;
       for(var gig of venue.events) {
-        var ul = document.createElement("ul");
+        console.log(venue);
+        console.log("gigStart", gig.startDate);
+        console.log("gigEnd", gig.endDate);
         div.appendChild(ul);
         ul.appendChild(this.createLi("Artist: ", gig.artist));
-        ul.appendChild(this.createLi("Date: ", this.app.formatDate(gig.startDate)));
-        ul.appendChild(this.createLi("Time: ", this.app.formatTime(gig.startTime)));
+        ul.appendChild(this.createLi("Date: ", this.dt.formatDate(gig.startDate)));
+        ul.appendChild(this.createLi("Time: ", this.dt.formatTime(gig.startTime)));
         ul.appendChild(this.createLi("Venue: ", venueName));
         ul.appendChild(this.createBtn());
       };
@@ -26,17 +40,16 @@ var DisplayEvents = function(app) {
     return li;
   };
 
+  this.createBtnString = function() {
+    return "<button type='button' class='tkt-btn'>Buy Tickets</button>"
+  };
+
   this.createBtn = function() {
-    var btn = document.createElement("button");
-    btn.setAttribute("type", "button");
-    btn.setAttribute("class", "tkt-btn");
-    btn.innerText = "Buy Tickets";
-
-    var a = document.createElement("a");
-    a.setAttribute("href", "/orders/new");
-    a.appendChild(btn);
-
-    return a;
+    var btn = document.createElement('button');
+    btn.setAttribute('type', 'button');
+    btn.setAttribute('class', 'tkt-btn');
+    btn.innerText = 'Buy Tickets';
+    return btn; 
   };
 
 };

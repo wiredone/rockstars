@@ -45,75 +45,51 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var GigMap = __webpack_require__(1);
-	var User = __webpack_require__(9);
-	var ApiService = __webpack_require__(2);
-	var GeoLocator = __webpack_require__(5);
-	var CityGeocoder = __webpack_require__(6);
-	var GigMapperApp = __webpack_require__(7);
-	var DisplayEvents = __webpack_require__(8);
-	// var AccountService = require("./gig_map/account_service.js");
-	// var OrderService = require("./gig_map/order_service.js");
+	var User = __webpack_require__(2);
+	var ApiService = __webpack_require__(3);
+	var GeoLocator = __webpack_require__(6);
+	var CityGeocoder = __webpack_require__(7);
+	var GigMapperApp = __webpack_require__(8);
+	var DisplayEvents = __webpack_require__(9);
+	var DateTime = __webpack_require__(10);
+	
 	
 	var main = function() {
 	
-	  var getUserName = function() {
-	    var currentUser = JSON.parse(localStorage.getItem("user"));
-	    var p = document.getElementById("user");
-	    p.innerText = currentUser.login;
-	  };
-	
+	  var user = new User(userId);
+	  var coords = {lat: 39.8282172, lng: -99.139815};
+	  var map = new GigMap(coords, 4);
+	  var dt = new DateTime();
+	  var eventsDisplay = new DisplayEvents(dt, map);
+	  var cityGeocoder = new CityGeocoder();
+	  var locator = new GeoLocator(map);
+	  var apiService = new ApiService();
+	  var app = new GigMapperApp(map, cityGeocoder, apiService, eventsDisplay, dt);
+	  
+	  
 	  if(!JSON.parse(localStorage.getItem("user"))) {
 	    var url = window.location.href;
 	    var splitUrl = _.split(url, "=");
 	    var userId = splitUrl[1];
-	    var user = new User(userId);
+	    
 	    user.getUser(function() {
-	    getUserName();
+	    app.getUserName();
 	    });
 	  } else {
-	    getUserName();
+	    app.getUserName();
 	  };
 	
-	  var coords = {lat: 39.8282172, lng: -99.139815};
-	  var map = new GigMap(coords, 4);
-	  var cityGeocoder = new CityGeocoder();
-	  var locator = new GeoLocator(map);
-	  var apiService = new ApiService();
-	  var app = new GigMapperApp(map, cityGeocoder, apiService);
-	  var eventsDisplay = new DisplayEvents(app);
-	
 	  map.bindClick(function(coords) {
-	    setGet(coords);
+	    app.setGetApi(coords);
 	    map.resetCenter(coords);
 	  });
 	
-	  var setGet = function(coords) {
-	    apiService.setLatLng(coords);
-	    apiService.setDates(app.dateToday(), app.dateToday(75));
-	    apiService.setGenre("");
-	    getEvents();
-	  };
-	
-	  var getEvents = function() {
-	    map.removeMarkers();
-	    apiService.getEvents(function(venues) {
-	      for(var venue of venues) {
-	        var venueHTML = venue.name;
-	        for(var gig of venue.events) {
-	          venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + app.formatDate(gig.startDate) + "<br>" + app.formatTime(gig.startTime) + "<br><a href='/orders/new'><button type='button'>Buy Tickets</button><br></a>";
-	        };
-	        map.addInfoWindow(venue.latLng, venue.name, venueHTML);
-	      };
-	      eventsDisplay.render(venues);
-	    });
-	  };
-	
 	  document.getElementById("city-btn").addEventListener("click", function() {
-	      app.setCity();
-	      app.findCity(event, function() {
-	        var citySelect = document.getElementById("city-drop");
-	        app.updateCity(citySelect);
-	      });
+	    app.setCity();
+	    app.findCity(event, function() {
+	      var citySelect = document.getElementById("city-drop");
+	      app.updateCity(citySelect);
+	    });
 	  });
 	
 	  var cities = document.getElementById("city-drop").addEventListener("change", function(event) {
@@ -126,56 +102,19 @@
 	      apiService.setLatLng(coords);
 	      apiService.setDates(app.startDate, app.endDate);
 	      apiService.setGenre(app.genre);
-	      getEvents();
+	      app.getEvents();
 	    });
 	  });
 	
 	  document.getElementById("geo-loc").addEventListener("click", function() {
 	    locator.findCoords(function(coords) {
-	      setGet(coords);
+	      app.setGetApi(coords);
 	    });
-	
-	
-	
-	
-	  // // Get the modal
-	  // var modal = document.getElementById('myModal');
-	
-	  // // Get the button that opens the modal
-	  // var btn = document.getElementById("myBtn");
-	
-	  // // Get the <span> element that closes the modal
-	  // var span = document.getElementsByClassName("close")[0];
-	
-	  // // When the user clicks on the button, open the modal
-	  // btn.onclick = function() {
-	  //     modal.style.display = "block";
-	  // }
-	
-	  // // When the user clicks on <span> (x), close the modal
-	  // span.onclick = function() {
-	  //     modal.style.display = "none";
-	  // }
-	
-	  // // When the user clicks anywhere outside of the modal, close it
-	  // window.onclick = function(event) {
-	  //     if (event.target == modal) {
-	  //         modal.style.display = "none";
-	  //     }
-	  // }
-	
-	
-	
-	
-	
 	  });
-	
-	
+	  
 	};
 	
-	
 	window.onload = main;
-
 
 /***/ },
 /* 1 */
@@ -236,9 +175,36 @@
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	
+	//just incase gigmapper.rocks/user/:id
+	
+	var User = function(userId) {
+	  this.userid = userId;
+	  this.url = "http://localhost:3000/user/" + this.userid;
+	  this.getUser = function(callback) {
+	    var request = new XMLHttpRequest();
+	    request.open("GET", this.url);
+	    request.onload = function() {
+	      if (request.status === 200) {
+	        var user = request.responseText;
+	        localStorage.setItem("user", user);
+	        callback();
+	        };
+	      }
+	    request.send(null);
+	  };
+	}
+	
+	module.exports = User;
+
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(3);
+	var _ = __webpack_require__(4);
 	
 	var ApiService = function() {
 	
@@ -262,6 +228,8 @@
 	
 	
 	  this.setDates = function(startDate, endDate) {
+	    console.log(startDate);
+	    console.log(endDate);
 	    var startString = "&startDateTime=" + startDate + "T00:00:00Z&";
 	    var endString = "endDateTime=" + endDate + "T23:59:59Z&";
 	    this.dateRange = startString + endString;
@@ -293,7 +261,7 @@
 	
 	
 	  this.createVenueObjects = function(returnedData) {
-	
+	    console.log(returnedData);
 	    var venueObjectArray = [];
 	
 	    var rawEvents = returnedData["_embedded"];
@@ -347,7 +315,7 @@
 	module.exports = ApiService;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -16755,10 +16723,10 @@
 	  }
 	}.call(this));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module), (function() { return this; }())))
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -16774,7 +16742,7 @@
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	var GeoLocator = function(map) {
@@ -16791,10 +16759,10 @@
 	module.exports = GeoLocator;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(3);
+	var _ = __webpack_require__(4);
 	
 	var CityGeocoder = function() {
 	  this.geocoder = new google.maps.Geocoder;
@@ -16821,10 +16789,10 @@
 	module.exports = CityGeocoder;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
-	var GigMapperApp = function(map, cityGeocoder, apiService) {
+	var GigMapperApp = function(map, cityGeocoder, apiService, eventsDisplay, dt) {
 	
 	  this.city = "";
 	  this.startDate = "";
@@ -16833,6 +16801,14 @@
 	  this.map = map;
 	  this.cityGeocoder = cityGeocoder;
 	  this.apiService = apiService;
+	  this.display = eventsDisplay;
+	  this.dt = dt;
+	
+	  this.getUserName = function() {
+	    var currentUser = JSON.parse(localStorage.getItem("user"));
+	    var p = document.getElementById("user");
+	    p.innerText = _.upperFirst(currentUser.login);
+	  };
 	
 	  this.setProperties = function(citySelect) {
 	    this.setCity();
@@ -16885,14 +16861,98 @@
 	      option.text = city;
 	      citySelect.appendChild(option);
 	    };
-	    var citySelectDiv = document.getElementById("drop");
-	    // citySelectDiv.style.visibility = "visible";
 	  };
 	
 	  this.updateCity = function(citySelect) {
 	    document.getElementById("city-input").value = this.getSelected(citySelect);
 	  };
 	
+	  this.setGetApi = function(coords) {
+	    this.apiService.setLatLng(coords);
+	    this.apiService.setDates(dt.dateToday(), dt.dateToday(75));
+	    this.apiService.setGenre("");
+	    this.getEvents();
+	  };
+	
+	  this.getEvents = function() {
+	    map.removeMarkers();
+	    this.apiService.getEvents(function(venues) {
+	      this.display.createInfoWindow(venues);
+	      this.display.createEventList(venues);
+	    }.bind(this));
+	  };
+	  
+	};
+	
+	module.exports = GigMapperApp;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(4);
+	
+	var DisplayEvents = function(dt, map) {
+	  this.dt = dt;
+	  this.map = map;
+	
+	  this.createInfoWindow = function(venues) {
+	    var venueHTML = "";
+	    for(var venue of venues) {
+	      for(var gig of venue.events) {
+	        var venueHTML = venueHTML + "<br>" + gig.artist + "<br>" + dt.formatDate(gig.startDate) + "<br>" + dt.formatTime(gig.startTime) + "<br>" + this.createBtnString() + "<br>";
+	      };
+	      this.map.addInfoWindow(venue.latLng, venue.name, venueHTML);
+	    };
+	  };
+	
+	  this.createEventList = function(venues) {
+	    var div = document.getElementById("scroll");
+	    var ul = document.createElement("ul");
+	    for(var venue of venues) {
+	      var venueName = venue.name;
+	      for(var gig of venue.events) {
+	        console.log(venue);
+	        console.log("gigStart", gig.startDate);
+	        console.log("gigEnd", gig.endDate);
+	        div.appendChild(ul);
+	        ul.appendChild(this.createLi("Artist: ", gig.artist));
+	        ul.appendChild(this.createLi("Date: ", this.dt.formatDate(gig.startDate)));
+	        ul.appendChild(this.createLi("Time: ", this.dt.formatTime(gig.startTime)));
+	        ul.appendChild(this.createLi("Venue: ", venueName));
+	        ul.appendChild(this.createBtn());
+	      };
+	    };
+	  };
+	
+	  this.createLi = function (header, content) {
+	    var li = document.createElement("li");
+	    li.setAttribute("class", "event-li");
+	    li.innerHTML = "<em><b>" + header + "</em></b>" + content;
+	    return li;
+	  };
+	
+	  this.createBtnString = function() {
+	    return "<button type='button' class='tkt-btn'>Buy Tickets</button>"
+	  };
+	
+	  this.createBtn = function() {
+	    var btn = document.createElement('button');
+	    btn.setAttribute('type', 'button');
+	    btn.setAttribute('class', 'tkt-btn');
+	    btn.innerText = 'Buy Tickets';
+	    return btn; 
+	  };
+	
+	};
+	
+	module.exports = DisplayEvents;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	var DateTime = function() {
 	  this.dateToday = function(numDays) {
 	
 	  var today = new Date();
@@ -16916,8 +16976,10 @@
 	  };
 	
 	  this.formatDate = function(date) {
+	    console.log("date in", date);
 	    var splitDate = _.split(date, "-");
 	    var newDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+	    console.log("date out", newDate);
 	    return newDate;
 	  };
 	
@@ -16926,87 +16988,9 @@
 	    var newTime = splitTime[0] + ":" + splitTime[1];
 	    return newTime;
 	  };
-	
 	};
 	
-	module.exports = GigMapperApp;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	var DisplayEvents = function(app) {
-	  this.app = app;
-	
-	  this.render = function(venues) {
-	    var div = document.getElementById("scroll");
-	
-	    for(var venue of venues) {
-	      console.log(venues);
-	      var venueName = venue.name;
-	      for(var gig of venue.events) {
-	        var ul = document.createElement("ul");
-	        div.appendChild(ul);
-	        ul.appendChild(this.createLi("Artist: ", gig.artist));
-	        ul.appendChild(this.createLi("Date: ", this.app.formatDate(gig.startDate)));
-	        ul.appendChild(this.createLi("Time: ", this.app.formatTime(gig.startTime)));
-	        ul.appendChild(this.createLi("Venue: ", venueName));
-	        ul.appendChild(this.createBtn());
-	      };
-	    };
-	  };
-	
-	  this.createLi = function (header, content) {
-	    var li = document.createElement("li");
-	    li.setAttribute("class", "event-li");
-	    li.innerHTML = "<em><b>" + header + "</em></b>" + content;
-	    return li;
-	  };
-	
-	  this.createBtn = function() {
-	    var btn = document.createElement("button");
-	    btn.setAttribute("type", "button");
-	    btn.setAttribute("class", "tkt-btn");
-	    btn.innerText = "Buy Tickets";
-	
-	    var a = document.createElement("a");
-	    a.setAttribute("href", "/orders/new");
-	    a.appendChild(btn);
-	
-	    return a;
-	  };
-	
-	};
-	
-	module.exports = DisplayEvents;
-
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	
-	//just incase gigmapper.rocks/user/:id
-	
-	var User = function(userId) {
-	  this.userid = userId;
-	  this.url = "http://localhost:3000/user/" + this.userid;
-	  this.getUser = function(callback) {
-	    var request = new XMLHttpRequest();
-	    request.open("GET", this.url);
-	    request.onload = function() {
-	      if (request.status === 200) {
-	        var user = request.responseText;
-	        localStorage.setItem("user", user);
-	        callback();
-	        };
-	      }
-	    request.send(null);
-	  };
-	}
-	
-	module.exports = User;
-
+	module.exports = DateTime;
 
 /***/ }
 /******/ ]);

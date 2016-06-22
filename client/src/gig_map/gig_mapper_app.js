@@ -1,4 +1,4 @@
-var GigMapperApp = function(map, cityGeocoder, apiService) {
+var GigMapperApp = function(map, cityGeocoder, apiService, eventsDisplay, dt) {
 
   this.city = "";
   this.startDate = "";
@@ -7,6 +7,14 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
   this.map = map;
   this.cityGeocoder = cityGeocoder;
   this.apiService = apiService;
+  this.display = eventsDisplay;
+  this.dt = dt;
+
+  this.getUserName = function() {
+    var currentUser = JSON.parse(localStorage.getItem("user"));
+    var p = document.getElementById("user");
+    p.innerText = _.upperFirst(currentUser.login);
+  };
 
   this.setProperties = function(citySelect) {
     this.setCity();
@@ -59,48 +67,27 @@ var GigMapperApp = function(map, cityGeocoder, apiService) {
       option.text = city;
       citySelect.appendChild(option);
     };
-    var citySelectDiv = document.getElementById("drop");
-    // citySelectDiv.style.visibility = "visible";
   };
 
   this.updateCity = function(citySelect) {
     document.getElementById("city-input").value = this.getSelected(citySelect);
   };
 
-  this.dateToday = function(numDays) {
-
-  var today = new Date();
-  if(numDays) {
-    var dd = today.getDate() + numDays;
-  } else {
-    var dd = today.getDate()
-  };
-  var mm = today.getMonth()+1; //January is 0!
-  var yyyy = today.getFullYear();
-  if(dd<10) {
-      dd = "0" + dd
-  } 
-  if(mm<10) {
-      mm = "0" + mm
-  }
-
-  today = yyyy + "-" + mm + "-" + dd;
-  _.toString(today);
-  return today
+  this.setGetApi = function(coords) {
+    this.apiService.setLatLng(coords);
+    this.apiService.setDates(dt.dateToday(), dt.dateToday(75));
+    this.apiService.setGenre("");
+    this.getEvents();
   };
 
-  this.formatDate = function(date) {
-    var splitDate = _.split(date, "-");
-    var newDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
-    return newDate;
+  this.getEvents = function() {
+    map.removeMarkers();
+    this.apiService.getEvents(function(venues) {
+      this.display.createInfoWindow(venues);
+      this.display.createEventList(venues);
+    }.bind(this));
   };
-
-  this.formatTime = function(time) {
-    var splitTime = _.split(time, ":");
-    var newTime = splitTime[0] + ":" + splitTime[1];
-    return newTime;
-  };
-
+  
 };
 
 module.exports = GigMapperApp;
